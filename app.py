@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
+    raise RuntimeError("DATABASE_URL not found!")
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
@@ -20,10 +20,9 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-
-@app.route("/")
+@app.route('/')
 def index():
-    return "Project 1: DONE"
+    return render_template("index.html")
 
 if __name__ == '__main__':
     app.run(debug=False)

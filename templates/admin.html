@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Inicio
+{% endblock %}
+
+{% block main %}
+
+<h1>Inicio</h1>
+<ul>
+    {% for row in rows %}
+
+    <li>{{row}}
+
+        <a href="/users/{{row[0]}}" class="btn btn-info">Ver detalle</a>
+    </li>
+
+
+    {% endfor %}
+</ul>
+
+{% endblock %}
