@@ -1,0 +1,7 @@
+# created by virtualenv automatically
+flask_session/
+__pycache__/
+include/
+Lib/
+Scripts/
+../Weeks/
