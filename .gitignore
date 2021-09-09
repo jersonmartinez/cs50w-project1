@@ -4,4 +4,4 @@ __pycache__/
 include/
 Lib/
 Scripts/
-../Weeks/
+./pyvenv.cfg
