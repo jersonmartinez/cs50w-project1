@@ -14,6 +14,7 @@ if not os.getenv("DATABASE_URL"):
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 Session(app)
 
 # Set up database
