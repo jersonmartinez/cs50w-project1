@@ -1,7 +1,7 @@
 {% extends 'layout.html' %} {% block title %} Crashell Books {% endblock %} {% block main %}
 
-<p>
-    <div class="col-md-12">
+<div class="row">
+    <div class="col-md-12 col-lg-12">
         <div class="card web50-card-dark">
             <h5 class="card-header">¿Estás buscando un libro?</h5>
             <div class="card-body">
@@ -9,46 +9,26 @@
                 <p class="card-text">
                     Usualmente, en la búsqueda de libros, se busca por título, autor o temática.
                 </p>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>Amor y deseo son dos cosas diferentes; que no todo lo que se ama se desea, ni todo lo que se desea se ama</p>
-                    </div>
-                    <div class="col-md-6"></div>
-                </div>
-
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col-md-6 mx-auto">
-            <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
-                <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-book text-white"></i>
-                </div>
-                <p class="mb-0 mt-2 font-italic">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    <a href="#" class="text-info">@consequat</a>."</p>
+<div class="row">
+    {% for dict_item in Dict_Phrases %} {% for key, value in dict_item.items() %}
+    <div class="col-md-6 mx-auto">
+        <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
+            <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-book text-white"></i>
+            </div>
+            <p class="mb-0 mt-2 font-italic">"{{key}}"
                 <footer class="blockquote-footer pt-4 mt-4 border-top">Someone famous in
-                    <cite title="Source Title">Source Title</cite>
+                    <cite title="Source Title">{{value}}</cite>
                 </footer>
-            </blockquote>
-        </div>
-        <div class="col-md-6 mx-auto">
-            <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
-                <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-book text-white"></i>
-                </div>
-                <p class="mb-0 mt-2 font-italic">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    <a href="#" class="text-info">@consequat</a>."</p>
-                <footer class="blockquote-footer pt-4 mt-4 border-top">Someone famous in
-                    <cite title="Source Title">Source Title</cite>
-                </footer>
-            </blockquote>
-        </div>
+        </blockquote>
     </div>
+    {% endfor %} {% endfor %}
+</div>
 
-    {% if session["username"] %}
-    <span>Inició como: {{session["username"]}}</span> {% else %}
-    <span>No has iniciado sesión</span> {% endif %}
-</p>
-
-{% endblock %}
+{% if session["username"] %}
+<span>Inició como: {{session["username"]}}</span> {% else %}
+<span>No has iniciado sesión</span> {% endif %} {% endblock %}
