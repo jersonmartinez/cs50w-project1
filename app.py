@@ -22,7 +22,7 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 Dict_Phrases = [
-    {'Seas quien seas, hagas lo que hagas, cuando deseas con firmeza alguna cosa es porque este deseo nació en el alma del universo. Es tu misión en la tierra':'El Alquimista (Paulo Coelho)'},
+    {'Seas quien seas, hagas lo que hagas, cuando deseas con firmeza alguna cosa es porque este deseo nació en el alma del universo.':'El Alquimista (Paulo Coelho)'},
     {'Hay que tener mucho valor para oponernos a nuestros enemigos, pero mucho más para desafiar a nuestros amigos':'Harry Potter y la Piedra Filosofal'},
     {'El mundo era tan reciente que muchas cosas carecían de nombre, y para nombrarlas había que señalarlas con el dedo':'Cien Años de Soledad (Gabriel García Márquez)'},
     {'Amor y deseo son dos cosas diferentes; que no todo lo que se ama se desea, ni todo lo que se desea se ama':'Don Quijote de la Mancha (Miguel de Cervantes)'},

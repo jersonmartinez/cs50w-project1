@@ -395,3 +395,33 @@ ul.cs-social-list a:hover {
     top: -20px;
     left: 45%;
 }
+
+.close:focus {
+    outline: none
+}
+
+.container.justify-content-center {
+    margin-top: 200px
+}
+
+.modal-header {
+    border: none
+}
+
+.modal-footer {
+    border: none
+}
+
+.btn-danger {
+    background: #DD2750;
+    border: 1px solid #C43352
+}
+
+.btn-light {
+    border: 1px solid #E7E7E9
+}
+
+.btn:focus {
+    box-shadow: none
+}
+

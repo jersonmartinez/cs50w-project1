@@ -40,10 +40,12 @@ class UserInfo(db.Model):
     __tablename__   = "users_info"
     id              = db.Column(db.Integer, primary_key=True)
     nickname        = db.Column(db.String(80), unique=True, nullable=False)
+    email           = db.Column(db.String(80), unique=True, nullable=False)
     user_id         = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-    def __init__(self, nickname, user_id):
+    def __init__(self, nickname, email, user_id):
         self.nickname   = nickname
+        self.email      = email
         self.user_id    = user_id
 
     def __repr__(self):

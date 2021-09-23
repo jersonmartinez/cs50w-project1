@@ -14,9 +14,11 @@
     </div>
 </div>
 
+<div class="mt-5"></div>
+
 <div class="row">
     {% for dict_item in Dict_Phrases %} {% for key, value in dict_item.items() %}
-    <div class="col-md-6 mx-auto">
+    <div class="col-md-6 mx-auto mt-3">
         <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
             <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-book text-white"></i>
             </div>
@@ -30,5 +32,108 @@
 </div>
 
 {% if session["username"] %}
-<span>Inició como: {{session["username"]}}</span> {% else %}
-<span>No has iniciado sesión</span> {% endif %} {% endblock %}
+    <span>Inició como: {{session["username"]}}</span> 
+{% else %}
+    <span>No has iniciado sesión</span> 
+    <!-- Modal Login -->
+    <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container d-flex pl-0"><img src="{{ url_for('static', filename='images/logo/favicon.png') }}">
+                        <h5 class="modal-title ml-2" id="signinLabel">Inicia sesión</h5>
+                    </div> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">&times;</span> </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">¡Haz un poco de memoria! 😉</p>
+            
+                    <label for="login_username">Nombre de usuario</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Nombre de usuario" id="login_username"
+                            aria-label="login_username" aria-describedby="login_username">
+                    </div>
+                    <label for="login_password">Contraseña</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="login_password" class="form-control" placeholder="Contraseña" id="login_password"
+                            aria-label="login_password" aria-describedby="login_password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="login_submit" class="btn btn-dark text-light">Iniciar sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Signin -->
+    <div class="modal fade" id="signin" tabindex="-1" role="dialog" aria-labelledby="signinLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="container d-flex pl-0"><img src="{{ url_for('static', filename='images/logo/favicon.png') }}">
+                        <h5 class="modal-title ml-2" id="signinLabel">Regístrate</h5>
+                    </div> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">&times;</span> </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">¡Estupendo! En cuanto acabe el registro, puede iniciar sesión para disfrutar de sus libros favoritos 🤓</p>
+                    
+                    <label for="signin_nickname">Apodo</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-check" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="¿Cómo quieres que te llamen tus fans?" id="signin_nickname" aria-label="signin_nickname" aria-describedby="signin_nickname">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <label for="signin_username">Nombre de usuario</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Nombre de usuario" id="signin_username" aria-label="signin_username"
+                                    aria-describedby="signin_username">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-12">
+                            <label for="signin_password">Contraseña</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="signin_password" class="form-control" placeholder="Contraseña" id="signin_password" aria-label="signin_password"
+                                    aria-describedby="signin_password">
+                            </div>
+                        </div>
+                    </div>
+
+                    <label for="signin_email">Email</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                        </div>
+                        <input type="signin_email" class="form-control" placeholder="Dirección de correo" id="signin_email" aria-label="signin_email" aria-describedby="signin_email">
+                    </div>
+
+                </div>
+                <div class="modal-footer"> 
+                    <button type="button" id="signin_submit" class="btn btn-dark text-light">Registrar ahora</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %} 
+
+{% endblock %}
