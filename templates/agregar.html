@@ -1,0 +1,23 @@
+<h2>Agregar Pelicula</h2>
+
+<form onsubmit="agregar(this); return false;">
+    <div class="form-group">
+        <label for="name">Nombre</label>
+        <input type="text" class="form-control" name="name" placeholder="name" required>
+    </div>
+    <div class="form-group">
+        <label for="year">Año de Publicación</label>
+        <input type="text" class="form-control" name="year" placeholder="year" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Descripción</label>
+        <input type="text" class="form-control" name="description" placeholder="description" required>
+    </div>
+    <div class="form-group">
+        <label for="image">Imagen</label>
+        <input type="text" class="form-control" placeholder="image link" name="image">
+    </div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-info" value="agregar">
+    </div>
+</form>

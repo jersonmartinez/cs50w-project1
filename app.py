@@ -1,9 +1,11 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, flash
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -32,7 +34,87 @@ Dict_Phrases = [
 
 @app.route('/')
 def index():
-    return render_template("index.html", len = len(Dict_Phrases), Dict_Phrases = Dict_Phrases)
+    return render_template("index.html", recent_books = get_recent_books(), old_books = get_old_books(), len = len(Dict_Phrases), Dict_Phrases = Dict_Phrases)
+
+@app.route("/login", methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    result = db.execute("SELECT * FROM users WHERE username=:username", {"username": username}).fetchone()
+
+    if not result:
+        return 'incorrect_username'
+    else:
+        if check_password_hash(result[2], password):
+            result_info = db.execute("SELECT * FROM users_info WHERE username=:username", {"username": username}).fetchone()
+            session["username"] = result[1]
+            session["nickname"] = result_info[1]
+
+            return 'Ok'
+        else:
+            return 'incorrect_password'
+
+@app.route("/signin", methods=['POST'])
+def signin():
+    nickname = request.form.get('nickname')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email    = request.form.get('email')
+
+    validate_username = db.execute("SELECT * FROM users WHERE username=:username", {"username": username}).rowcount
+    
+    if validate_username != 0:
+        return 'user_exists'
+    else:
+        validate_email = db.execute("SELECT * FROM users_info WHERE email=:email", {"email": email}).rowcount
+        if validate_email != 0:
+            return 'email_exists'
+        else:
+            hashed_password = generate_password_hash(password)
+            db.execute("INSERT INTO users_info (username, nickname, email) VALUES (:username, :nickname, :email)", {"username": username, "nickname": nickname, "email": email})
+            db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", {"username": username, "password": hashed_password})
+            db.commit()
+            session["username"] = username
+            session["nickname"] = nickname
+            return 'Ok'
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+
+@app.route('/agregar', methods=["POST", "GET"])
+def agregar():
+    if request.method == 'POST':
+        name = request.form.get("name")
+        year = int(request.form.get("year"))
+        desc = request.form.get("description")
+        image = request.form.get("image")
+
+        if not name or not year or not desc:
+            return render_template("error.html", error=400, message="Falta info")
+        db.execute("INSERT INTO movies (name, year, description, image) VALUES (:name, :year, :desc, :image)", {'name':name, 'year':year, 'desc':desc, 'image':image})
+        db.commit()
+        return render_template("agregar.html")
+
+    else:
+        return render_template("agregar.html")
+
+
+def get_recent_books():
+    books = db.execute("SELECT * FROM books ORDER BY year DESC LIMIT 15").fetchall()
+    if not books:
+        return 'there_is_not_records'
+    else:
+        return books
+
+def get_old_books():
+    books = db.execute("SELECT * FROM books ORDER BY year ASC LIMIT 15").fetchall()
+    if not books:
+        return 'there_is_not_records'
+    else:
+        return books
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

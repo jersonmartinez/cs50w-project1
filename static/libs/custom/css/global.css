@@ -425,3 +425,22 @@ ul.cs-social-list a:hover {
     box-shadow: none
 }
 
+.label-ShowFieldsKeys {
+    cursor:pointer; 
+    position: absolute; 
+    right:15px;
+    top: 6px;
+    color: #fff;
+    background-color: rgba(0,0,0,.5);
+    border-radius: 4px;
+    padding: 0 5px;
+    font-size: 11px;
+}
+
+.label-ShowFieldsKeys:hover {
+    background-color: rgba(0,0,0,.7);
+}
+
+.label-ShowFieldsKeys:active {
+    background-color: rgba(0,0,0,.9);
+}

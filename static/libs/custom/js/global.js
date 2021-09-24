@@ -35,43 +35,202 @@ toastr.options = {
 };
 
 $(document).ready(function () {
-    //Event clic on button
-    $("#signin_submit").click(function () {
-        //Show menu
-        console.log("Sign in submit button");
 
-        //Get data
-        var nickname = $("#signin_nickname").val(), 
-            username = $("#signin_username").val(),
-            password = $("#signin_password").val(),
-            email    = $("#signin_email").val();
+    // ------------------------------------
+    // Block for Login
+    // ------------------------------------
 
-        //Validate data
-        if (nickname == "" || username == "" || password == "" || email == "") {
-            // alert("Please, fill all fields");
-            toastr["info"]("Por favor, rellene todos los campos", "Intento de registro");
-        } else {
-            // alert("Perfect!");
-            toastr["success"]("Usted ha sido registrado con éxito", "Satisfactorio");
-        }
+    /*Capture event button submit for Login*/
+    $('#login_submit').click(() => {
+        sendFormLogin();
     });
 
-    $("#login_submit").click(function () {
-        //Show menu
-        console.log("Login submit button");
+    var FormAdminLogin = document.getElementById('FormAdminLogin');
+    if (FormAdminLogin !== null)
+        FormAdminLogin.addEventListener('keypress', captureEventEnterAdminForm);
 
-        //Get data
-        var username = $("#login_username").val(),
-            password = $("#login_password").val();
+    function captureEventEnterAdminForm(e) {
+        if (e.which == 13)
+            sendFormLogin();
+    }
 
-        //Validate data
-        if (username == "" || password == "") {
-            // alert("Please, fill all fields");
-            toastr["info"]("Por favor, rellene todos los campos", "Intento de login");
-        } else {
-            // alert("Perfect!");
-            toastr["success"]("Usted ha iniciado sesión con éxito", "Satisfactorio");
+    // ------------------------------------
+    // Block for Signin
+    // ------------------------------------
+
+    /*Capture event button submit for Signin*/
+    $('#signin_submit').click(() => {
+        sendFormSignin();
+    });
+
+    var FormAdminSignin = document.getElementById('FormAdminSignin');
+    if (FormAdminSignin !== null)
+        FormAdminSignin.addEventListener('keypress', captureEventEnterAdminFormSignin);
+
+    function captureEventEnterAdminFormSignin(e) {
+        if (e.which == 13)
+            sendFormSignin();
+    }
+
+    $("input[id=signin_password]").keyup(function () {
+        if (this.value == '') {
+            $("#signin_password").attr("type", "password");
         }
-
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Mensaje');
+    window.onpopstate = e => {
+        console.log(e);
+        const data = e.state;
+        document.title = data.title;
+        if (e.state) {
+            document.getElementById('contenidoDinamico').innerHTML = e.state;
+        }
+    }
+});
+
+function renderHTML(ruta){
+    let request = new XMLHttpRequest();
+    request.open('GET', ruta);
+
+    request.onload = function(){
+        if(request.status == 200){
+            let res = request.responseText;
+            let content = document.getElementById('contenidoDinamico');
+            content.innerHTML = res;
+
+            history.pushState(document.textContent, ruta, ruta);
+
+            return false;
+        } else {
+            console.log('Algo ha salido mal');
+        }
+    }
+
+    request.send();
+}
+
+function sendFormLogin() {
+    var username = $('#login_username'),
+        password = $('#login_password');
+
+    if (username.val() != '') {
+        if (password.val() != '') {
+
+            $.ajax({
+                data: { 'username': username.val(), 'password': password.val() },
+                url: "/login",
+                type: "post",
+                success: function (datos) {
+                    if (datos == "Ok") {
+                        $('#FormAdminLogin').trigger("reset");
+                        toastr["success"]("Usted ha iniciado sesión con éxito", "Satisfactorio");
+                        setTimeout(function () {
+                            window.location.href = "/";
+                        }, 2000);
+                    } else if (datos == "incorrect_username") {
+                        username.focus();
+                        toastr["info"]("El usuario no existe", "Usuario");
+                    } else if (datos == "incorrect_password") {
+                        password.val("");
+                        password.focus();
+                        toastr["info"]("La contraseña no es válida", "Credencial");
+                    } else {
+                        $('#messageModalValidationFormLogin').html("<i class='fa fa-info'></i> Está comprobado de que somos humanos y cometemos errores, inténtelo más tarde.");
+                        openModal('btnModalValidationFormLogin');
+                    }
+                }
+            });
+        } else {
+            $('#messageModalValidationFormLogin').html('Con una rica taza de café no se nos escapa ningún campo, escriba su contraseña.');
+            openModal('btnModalValidationFormLogin');
+        }
+    } else {
+        $('#messageModalValidationFormLogin').html('Con una rica taza de café no se nos escapa ningún campo, escriba su nombre de usuario.');
+        openModal('btnModalValidationFormLogin');
+    }
+}
+
+function sendFormSignin() {
+    var nickname = $('#signin_nickname').val(),
+        username = $('#signin_username').val(),
+        password = $('#signin_password').val(),
+        email = $('#signin_email').val();
+
+    if (nickname != '' && username != '' && password != '' && email != '') {
+        
+        if (!ValidateEmail(email)){
+            $('#signin_email').focus();
+            toastr["info"]("Escriba una dirección correcta", "Correo electrónico");
+            return;
+        } else {
+            $.ajax({
+                data: {
+                    'nickname': nickname,
+                    'username': username,
+                    'password': password,
+                    'email': email
+                },
+                url: "/signin",
+                type: "post",
+                success: function (datos) {
+                    if (datos == "Ok") {
+                        $('#FormAdminSignin').trigger("reset");
+                        setTimeout(function () {
+                            $('#signin').modal('toggle');
+                        }, 1000);
+                        setTimeout(function () {
+                            window.location.href = "/";
+                        }, 3000);
+                        toastr["success"]("¡Usted ha sido registrado!", "Satisfactorio");
+                        console.log(datos);
+                    } else if (datos == "user_exists") {
+                        $('#signin_username').focus();
+                        toastr["info"]("Este usuario ya existe", "Usuario");
+                    } else if (datos == "email_exists") {
+                        $('#signin_email').focus();
+                        toastr["info"]("Este correo electrónico ya existe", "Correo electrónico");
+                    } else {
+                        $('#messageModalValidationFormLogin').html("<i class='fa fa-info'></i> Está comprobado de que somos humanos y cometemos errores, inténtelo más tarde.");
+                        openModal('btnModalValidationFormLogin');
+                    }
+                }
+            });
+        }
+    } else {
+        $('#messageModalValidationFormLogin').html('Con una rica taza de café no se nos escapa ningún campo, rellénelos todos con sus datos.');
+        openModal('btnModalValidationFormLogin');
+    }
+}
+
+function openModal(id) {
+    $('#' + id).click();
+}
+
+function ValidateEmail(email) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+        return true;
+    return false;
+}
+
+function ShowFieldsKeys() {
+    $("#signin_password").attr("type", "text");
+
+    var Key = GenerateKey(12);
+
+    $("#signin_password").val(Key);
+}
+
+function GenerateKey(lng) {
+    long = parseInt(lng);
+
+    var caracteres = "abcdefghijkmnpqrtuvwxyzABCDEFGHIJKLMNPQRTUVWXYZ2346789!@#$%^&*()?><_+";
+    var password = "";
+
+    for (i = 0; i < long; i++)
+        password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+
+    return password;
+}

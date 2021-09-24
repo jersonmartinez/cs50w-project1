@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/fontawesome/css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/custom/css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/toastr/css/toastr.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/custom/css/scroll-to-top.css') }}">
+    <script src="{{ url_for('static', filename='libs/jquery/jquery-3.6.0.min.js') }}"></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <div class="d-block d-sm-block d-md-none">
+                <a class="navbar-brand cursor-pointer text-light" href="#">
+                    <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}" class="img-fluid" alt="Crashell">
+                </a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <div class="d-none d-sm-none d-md-block">
+                    <a class="navbar-brand" href="#">
+                        <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}" alt="Antonio Moreno" />
+                    </a>
+                </div>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link text-light" href="" data-toggle="modal" data-target="#login">
+                            <i class="fas fa-book"></i> Mis libros
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="" data-toggle="modal" data-target="#signin">
+                            <i class="fas fa-globe-americas"></i> Libros de Google
+                        </a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i> {{session["nickname"]}}
+                        </a>
+                    
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="./logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container my-4 py-4"></div>
+
+    <main class="container my-4" role="main">
+
+        <h1 class="bd-title text-light">Biblioteca</h1>
+        <p class="bd-lead text-light">¡Te muestro los 15 libros más recientes que se han publicado!</p>
+
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for book in recent_books %}
+                <div class="col mb-4">
+                    <div class="card h-100" style="background: rgba(0,0,0,.4); color: #fff;">
+                        <div class="row">
+                            <div class="col-md-4 col-4">
+                                <img src="{{ url_for('static', filename='images/study.png') }}" style="padding: 10px; width: 100%; height: auto; margin: 15% 0 0 15px;" alt="...">
+                            </div>
+                            <div class="col-md-8 col-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{book.title}}</h5>
+                                    <p class="card-text">{{book.author}}</p>
+                                    <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> {{book.year}}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <hr>
+
+        <p class="bd-lead text-light">¡Te muestro los 15 libros con mayor antigüedad que se han publicado!</p>
+
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for book in old_books %}
+            <div class="col mb-4">
+                <div class="card h-100" style="background: rgba(0,0,0,.4); color: #fff;">
+                    <div class="row">
+                        <div class="col-md-4 col-4">
+                            <img src="{{ url_for('static', filename='images/study.png') }}"
+                                style="padding: 10px; width: 100%; height: auto; margin: 15% 0 0 15px;" alt="...">
+                        </div>
+                        <div class="col-md-8 col-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{book.title}}</h5>
+                                <p class="card-text">{{book.author}}</p>
+                                <p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i>
+                                        {{book.year}}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% block main %} {% endblock %}
+    </main>
+
+    <footer>
+
+        <div class="bt">
+            <div class="elementor-shape divider flip-x injected-svg bg-divider-darker" data-negative="false">
+                <svg class="bg-divider-darker" xmlns="http://www.w3.org/2000/svg" viewBox="0 2 1000 100" preserveAspectRatio="none">
+                        <path class="elementor-shape-fill" style="box-sizing: unset !important;"
+                            d="M421.9,6.5c22.6-2.5,51.5,0.4,75.5,5.3c23.6,4.9,70.9,23.5,100.5,35.7c75.8,32.2,133.7,44.5,192.6,49.7 c23.6,2.1,48.7,3.5,103.4-2.5c54.7-6,106.2-25.6,106.2-25.6V0H0v30.3c0,0,72,32.6,158.4,30.5c39.2-0.7,92.8-6.7,134-22.4 c21.2-8.1,52.2-18.2,79.7-24.2C399.3,7.9,411.6,7.5,421.9,6.5z">
+                        </path>
+                    </svg>
+            </div>
+        </div>
+
+        <div class="container-fluid bg-cs-darker">
+            <div class="container py-1">
+                <div class="row cs-footer text-center py-lg-10 pt-3 pb-5">
+                    <div class="col-12">
+                        <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}" class="img-fluid" alt="Crashell">
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <ul class="cs-social-list">
+                            <li>
+                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-github" target="_blank" rel="noopener noreferrer" href="https://github.com/jersonmartinez/">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-twitter" target="_blank" rel="noopener noreferrer" href="https://twitter.com/antoniomorenosm"></a>
+                            </li>
+                            <li>
+                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-linkedin-in" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/jersonmartinezsm/"></a>
+                            </li>
+                            <li>
+                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-youtube" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/gvideosmtutorialesgm"></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <small class="text-light">
+                            Todos los derechos reservados
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <a href="#" class="scroll-top text-center" id="ScrollToTop">
+        <i class="fas fa-angle-double-up"></i>
+    </a>
+
+    <script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/toastr/js/toastr.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/custom/js/global.js') }}"></script>
+</body>
+
+</html>

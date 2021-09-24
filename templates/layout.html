@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{% block title %}{% endblock %}</title>
+    <title>Crashell {% block title %}{% endblock %}</title>
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootstrap/css/bootstrap.min.css') }}">
@@ -35,6 +35,9 @@
                     </a>
                 </div>
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
                     <li class="nav-item active">
                         <a class="nav-link text-light" href="" data-toggle="modal" data-target="#login">
                             <i class="fa fa-home"></i> Iniciar sesión
@@ -46,10 +49,6 @@
                             <i class="fas fa-briefcase"></i> Regístrate
                         </a>
                     </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="email" placeholder="Déjame tu correo" aria-label="Suscríbete">
-                    <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Suscribirse</button>
                 </form>
             </div>
         </div>
@@ -57,7 +56,178 @@
     <div class="container my-4 py-4"></div>
 
     <main class="container my-4" role="main">
+
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="card web50-card-dark">
+                    <h5 class="card-header">¿Estás buscando un libro?</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">¡Hola 👋, soy Antonio y déjame guiarte!</h5>
+                        <p class="card-text">
+                            Usualmente, en la búsqueda de libros, se busca por título, autor o temática.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-5"></div>
+
         {% block main %} {% endblock %}
+
+        <div class="row">
+            {% for dict_item in Dict_Phrases %} {% for key, value in dict_item.items() %}
+            <div class="col-md-6 mx-auto mt-3">
+                <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
+                    <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-book text-white"></i>
+                    </div>
+                    <p class="mb-0 mt-2 font-italic">"{{key}}"
+                    <footer class="blockquote-footer pt-4 mt-4 border-top">Someone famous in
+                        <cite title="Source Title">{{value}}</cite>
+                    </footer>
+                </blockquote>
+            </div>
+            {% endfor %} {% endfor %}
+        </div>
+
+
+        <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="FormAdminLogin">
+                        <div class="modal-header">
+                            <div class="container d-flex pl-0"><img
+                                    src="{{ url_for('static', filename='images/logo/favicon.png') }}">
+                                <h5 class="modal-title ml-2" id="signinLabel">Inicia sesión</h5>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+        
+                        <div class="modal-body">
+                            <p class="text-muted">¡Haz un poco de memoria! 😉</p>
+        
+                            <label for="login_username">Nombre de usuario</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Nombre de usuario" id="login_username"
+                                    aria-label="login_username" aria-describedby="login_username">
+                            </div>
+                            <label for="login_password">Contraseña</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="password" class="form-control" placeholder="Contraseña" id="login_password"
+                                    aria-label="login_password" aria-describedby="login_password">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="login_submit" class="btn btn-dark text-light">Iniciar sesión</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Signin -->
+        <div class="modal fade" id="signin" tabindex="-1" role="dialog" aria-labelledby="signinLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="FormAdminSignin">
+                        <div class="modal-header">
+                            <div class="container d-flex pl-0"><img
+                                    src="{{ url_for('static', filename='images/logo/favicon.png') }}">
+                                <h5 class="modal-title ml-2" id="signinLabel">Regístrate</h5>
+                            </div> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                                    aria-hidden="true">&times;</span> </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-muted">¡Estupendo! En cuanto acabe el registro, puede iniciar sesión para disfrutar
+                                de sus libros favoritos 🤓</p>
+        
+                            <label for="signin_nickname">Apodo</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="¿Cómo quieres que te llamen tus fans?"
+                                    id="signin_nickname" aria-label="signin_nickname" aria-describedby="signin_nickname"
+                                    required />
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <label for="signin_username">Nombre de usuario</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Nombre de usuario"
+                                            id="signin_username" aria-label="signin_username" aria-describedby="signin_username"
+                                            required />
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6 col-12">
+                                    <label for="signin_password">Contraseña</label>
+                                    <label class="label-ShowFieldsKeys"
+                                        onclick="javascript: ShowFieldsKeys()">Recomendar</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                        </div>
+                                        <input type="password" class="form-control" placeholder="Contraseña"
+                                            id="signin_password" aria-label="signin_password" aria-describedby="signin_password"
+                                            required />
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <label for="signin_email">Email</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="email" class="form-control" placeholder="Dirección de correo" id="signin_email"
+                                    aria-label="signin_email" aria-describedby="signin_email" required />
+                            </div>
+        
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="signin_submit" class="btn btn-dark text-light">Registrar ahora</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <input type="hidden" id="btnModalValidationFormLogin" class="btn mr-2 mb-2 btn-primary" data-toggle="modal"
+            data-target="#modalValidationFormLogin" />
+        
+        <div class="modal fade show" id="modalValidationFormLogin" tabindex="-1" role="dialog"
+            aria-labelledby="modalValidationFormLoginLabel" aria-modal="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalValidationFormLoginLabel">Verificación de credenciales</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0" id="messageModalValidationFormLogin">...</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">De acuerdo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer>
