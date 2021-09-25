@@ -3549,7 +3549,7 @@ readers do not read off random characters that represent icons */
   content: "\f5bf"; }
 
 .fa-star:before {
-  content: "\f005"; }
+  content: "\f005"; color: gold; }
 
 .fa-star-and-crescent:before {
   content: "\f699"; }

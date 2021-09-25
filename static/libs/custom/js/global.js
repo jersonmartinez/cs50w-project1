@@ -77,6 +77,10 @@ $(document).ready(function () {
             $("#signin_password").attr("type", "password");
         }
     });
+
+    $(".mis_libros").click(function () {
+        renderHTML("/mis_libros");
+    });
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -91,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function renderHTML(ruta){
+function renderHTMLs(ruta){
     let request = new XMLHttpRequest();
     request.open('GET', ruta);
 
@@ -110,6 +114,31 @@ function renderHTML(ruta){
     }
 
     request.send();
+}
+
+function agregar(form) {
+    let data = new FormData(form);
+    let request = new XMLHttpRequest();
+    request.open("POST", "/agregar");
+    request.onload = function () {
+        if (request.status == 200) {
+            document.querySelectorAll("input").forEach(input => {
+                input.value = "";
+            });
+            alert("Agregado con exito")
+            let res = request.responseText;
+            let content = document.getElementById("contenidoDinamico");
+            content.innerHTML = res;
+            history.pushState(document.textContent, ruta, ruta);
+            return false;
+        }
+        else {
+            alert("Ups.. Algo salió mal, no te preocupes, no es culpa tuya.")
+            return false;
+        }
+
+    };
+    request.send(data);
 }
 
 function sendFormLogin() {
@@ -185,7 +214,6 @@ function sendFormSignin() {
                             window.location.href = "/";
                         }, 3000);
                         toastr["success"]("¡Usted ha sido registrado!", "Satisfactorio");
-                        console.log(datos);
                     } else if (datos == "user_exists") {
                         $('#signin_username').focus();
                         toastr["info"]("Este usuario ya existe", "Usuario");

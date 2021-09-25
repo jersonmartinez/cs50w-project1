@@ -1,5 +1,5 @@
 import os
-
+import json
 from flask import Flask, render_template, request, session, redirect, flash
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -84,37 +84,93 @@ def logout():
     session.clear()
     return redirect("/")
 
-@app.route('/agregar', methods=["POST", "GET"])
-def agregar():
-    if request.method == 'POST':
-        name = request.form.get("name")
-        year = int(request.form.get("year"))
-        desc = request.form.get("description")
-        image = request.form.get("image")
+@app.route("/get_my_books", methods=["POST", "GET"])
+def get_my_books():
+    books = db.execute("SELECT * FROM books;").fetchall()
 
-        if not name or not year or not desc:
-            return render_template("error.html", error=400, message="Falta info")
-        db.execute("INSERT INTO movies (name, year, description, image) VALUES (:name, :year, :desc, :image)", {'name':name, 'year':year, 'desc':desc, 'image':image})
-        db.commit()
-        return render_template("agregar.html")
-
+    if not books:
+        return 'there_is_not_records'
     else:
-        return render_template("agregar.html")
+        row = []
 
+        for item in books:
+            row.append([item['isbn'], item['title'], item['author'] , item['year'], item['isbn']])
+
+        return json.dumps( row )
 
 def get_recent_books():
-    books = db.execute("SELECT * FROM books ORDER BY year DESC LIMIT 15").fetchall()
+    books = db.execute("SELECT * FROM books ORDER BY year DESC LIMIT 9").fetchall()
     if not books:
         return 'there_is_not_records'
     else:
         return books
 
 def get_old_books():
-    books = db.execute("SELECT * FROM books ORDER BY year ASC LIMIT 15").fetchall()
+    books = db.execute("SELECT * FROM books ORDER BY year ASC LIMIT 9").fetchall()
     if not books:
         return 'there_is_not_records'
     else:
         return books
+
+@app.route("/update_book", methods=['POST'])
+def update_book():
+    isbn    = request.form.get('isbn')
+    title   = request.form.get('title')
+    author  = request.form.get('author')
+    year    = request.form.get('year')
+
+    result = db.execute("UPDATE books SET title=:title, author=:author, year=:year WHERE isbn=:isbn", {"isbn": isbn, "title": title, "author": author, "year": year})
+    db.commit()
+    if not result:
+        return 'not_updated'
+    else:
+        return 'Ok'
+
+@app.route("/delete_book", methods=['POST'])
+def delete_book():
+    isbn = request.form.get('isbn')
+
+    result = db.execute("DELETE FROM books WHERE isbn=:isbn", {"isbn": isbn})
+    db.commit()
+    
+    if not result:
+        return 'not_deleted'
+    else:
+        return 'Ok'
+
+@app.route("/add_review", methods=['POST'])
+def add_review():
+    isbn    = request.form.get('isbn')
+    review  = request.form.get('review')
+    stars   = request.form.get('stars')
+
+    result = db.execute("INSERT INTO reviews (username, isbn, review, rating) VALUES (:username, :isbn, :review, :rating)", {"username": session["username"], "isbn": isbn, "review": review, "rating": stars})
+    db.commit()
+
+    if not result:
+        return 'not_added'
+    else:
+        return 'Ok'
+
+
+@app.route("/get_all_reviews_by_book", methods=["POST"])
+def get_all_reviews_by_book():
+    isbn = request.form.get('isbn')
+
+    print("Algo: " + isbn)
+
+    reviews = db.execute("SELECT * FROM reviews WHERE isbn=:isbn LIMIT 50", {"isbn": isbn}).fetchall()
+    db.commit()
+
+    if not reviews:
+        return 'there_is_not_records'
+    else:
+        row = []
+
+        for item in reviews:
+            row.append([item['isbn'], item['username'], item['rating'] , item['review']])
+
+        return json.dumps( row )
 
 if __name__ == '__main__':
     app.run(debug=True)

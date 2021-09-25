@@ -13,7 +13,33 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/custom/css/global.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/toastr/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/custom/css/scroll-to-top.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/custom/css/stars.css') }}">
     <script src="{{ url_for('static', filename='libs/jquery/jquery-3.6.0.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+
+    <!-- JS DataTables -->
+    <script src="{{ url_for('static', filename='libs/datatables/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/JSZip-2.5.0/jszip.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/DataTables-1.10.20/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/DataTables-1.10.20/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Buttons-1.6.1/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Buttons-1.6.1/js/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Buttons-1.6.1/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Buttons-1.6.1/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Buttons-1.6.1/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Buttons-1.6.1/js/buttons.print.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Responsive-2.2.3/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Responsive-2.2.3/js/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/RowGroup-1.1.1/js/dataTables.rowGroup.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/RowReorder-1.2.6/js/dataTables.rowReorder.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Scroller-2.0.1/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/datatables/components/Select-1.3.1/js/dataTables.select.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.20/dataRender/ellipsis.js"></script>
+    <!-- JS DataTables -->
+
 </head>
 
 <body>
@@ -36,13 +62,18 @@
                 </div>
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item active">
-                        <a class="nav-link text-light" href="" data-toggle="modal" data-target="#login">
-                            <i class="fas fa-book"></i> Mis libros
+                        <a class="nav-link text-light" href="./">
+                            <i class="fas fa-home"></i> Principal
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="" data-toggle="modal" data-target="#signin">
+                        <a class="nav-link text-light" href="#" id="option_header_mis_libros" onclick="javascript: getMyBooks();" >
+                            <i class="fas fa-book"></i> Mis libros
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="./">
                             <i class="fas fa-globe-americas"></i> Libros de Google
                         </a>
                     </li>
@@ -52,7 +83,7 @@
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user"></i> {{session["nickname"]}}
                         </a>
-                    
+
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="./logout"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
                         </div>
@@ -63,10 +94,10 @@
     </nav>
     <div class="container my-4 py-4"></div>
 
-    <main class="container my-4" role="main">
+    <main class="container my-4" role="main" id="main_dashboard">
 
         <h1 class="bd-title text-light">Biblioteca</h1>
-        <p class="bd-lead text-light">¡Te muestro los 15 libros más recientes que se han publicado!</p>
+        <p class="bd-lead text-light">¡Te muestro los 9 libros más recientes que se han publicado!</p>
 
         <div class="row row-cols-1 row-cols-md-3">
             {% for book in recent_books %}
@@ -91,7 +122,7 @@
 
         <hr>
 
-        <p class="bd-lead text-light">¡Te muestro los 15 libros con mayor antigüedad que se han publicado!</p>
+        <p class="bd-lead text-light">¡Te muestro los 9 libros con mayor antigüedad que se han publicado!</p>
 
         <div class="row row-cols-1 row-cols-md-3">
             {% for book in old_books %}
@@ -117,9 +148,163 @@
         </div>
 
         {% block main %} {% endblock %}
+
     </main>
 
     <footer>
+        
+        <input type="hidden" id="btnUpdateMyBooks" class="btn mr-2 mb-2 btn-primary" data-toggle="modal"
+            data-target="#UpdateMyBooks" />
+
+        <div class="modal fade" id="UpdateMyBooks" tabindex="-1" role="dialog" aria-labelledby="UpdateMyBooksLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="FormUpdateMyBooks">
+                        <div class="modal-header">
+                            <div class="container d-flex pl-0"><img
+                                    src="{{ url_for('static', filename='images/logo/favicon.png') }}">
+                                <h5 class="modal-title ml-2" id="signinLabel">Actualización</h5>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+        
+                        <div class="modal-body">
+                            <p class="text-muted">¡Ya quiero ver tus ocurrencias! 😁</p>
+        
+                            <label id="update_data_isbn"></label>
+                            <input type="hidden" id="update_data_isbn_value" value="" />
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <label for="update_book_title">Título</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-pen-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Título del libro" id="update_book_title"
+                                            aria-label="update_book_title" aria-describedby="update_book_title">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="update_book_author">Autor</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Autor" id="update_book_author" aria-label="update_book_author" aria-describedby="update_book_author">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="update_book_year">Año de publicación</label>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                        </div>
+                                        <input type="number" class="form-control" placeholder="Año de publicación" id="update_book_year"
+                                            aria-label="update_book_year" aria-describedby="update_book_year">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" id="update_book_submit" class="btn btn-primary text-light">Actualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="btnPanelReviews" class="btn mr-2 mb-2 btn-primary" data-toggle="modal"
+            data-target="#PanelReviews" />
+
+        <div class="modal fade" id="PanelReviews" tabindex="-1" role="dialog" aria-labelledby="PanelReviewsLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="PanelReviews">
+                        <div class="modal-header">
+                            <div class="container d-flex pl-0"><img
+                                    src="{{ url_for('static', filename='images/logo/favicon.png') }}">
+                                <h5 class="modal-title ml-2" id="signinLabel">Reviews</h5>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+        
+                        <div class="modal-body">
+                            <p class="text-muted">¡Veamos qué dicen sobre el libro, aunque, también puedes decir algo! 🧐</p>
+                            <hr>
+                            <div class="row row-cols-1 row-cols-md-2">
+                                <div class="col-md-5 mb-4">
+                                    <label id="panel_review_book_isbn"></label>
+                                    <input type="hidden" id="panel_review_book_isbn_value" value="" />
+
+                                    <div class="card h-100" style="background: rgba(0,0,0,.4); color: #fff;">
+                                        <div class="row">
+                                            <div class="col-md-4 col-4">
+                                                <img src="{{ url_for('static', filename='images/study.png') }}"
+                                                    style="padding: 10px; width: 100%; height: auto; margin: 15% 0 0 15px;" alt="...">
+                                            </div>
+                                            <div class="col-md-8 col-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title" id="panel_review_book_title"></h5>
+                                                    <p class="card-text" id="panel_review_book_author"></p>
+                                                    <p class="card-text" id="panel_review_book_year"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <form id="FormPanelReviews">
+                                        <p>Haz una reseña de este libro 🤓</p>
+                                        <div class="rating">
+                                        
+                                            <input type="radio" onclick="javascript: change_stars('1');" name="rating" id="r1">
+                                            <label for="r1"></label>
+                                        
+                                            <input type="radio" onclick="javascript: change_stars('2');" name="rating" id="r2">
+                                            <label for="r2"></label>
+                                        
+                                            <input type="radio" onclick="javascript: change_stars('3');" name="rating" id="r3">
+                                            <label for="r3"></label>
+                                        
+                                            <input type="radio" onclick="javascript: change_stars('4');" name="rating" id="r4">
+                                            <label for="r4"></label>
+                                        
+                                            <input type="radio" onclick="javascript: change_stars('5');" name="rating" id="r5">
+                                            <label for="r5"></label>
+                                        
+                                        </div>
+                                        <textarea name="panel_review_book_comment" id="panel_review_book_comment"></textarea>
+                                        <button type="button" id="add_review_submit" class="btn btn-primary text-light">Agregar</button>
+                                    </form>
+                                </div>
+
+                            </div>
+                            
+                            <hr>
+
+                            <div class="row" id="PanelReviewsShowData">
+                            </div>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="bt">
             <div class="elementor-shape divider flip-x injected-svg bg-divider-darker" data-negative="false">
@@ -175,6 +360,8 @@
     <script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='libs/toastr/js/toastr.js') }}"></script>
     <script src="{{ url_for('static', filename='libs/custom/js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/custom/js/dashboard.js') }}"></script>
+    
 </body>
 
 </html>

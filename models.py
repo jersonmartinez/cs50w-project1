@@ -50,20 +50,22 @@ class Users(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+class Reviews(db.Model):
+    __tablename__   = "reviews"
+    id              = db.Column(db.Integer, primary_key=True)
+    username        = db.Column(db.String, nullable=False)
+    isbn            = db.Column(db.String, nullable=False)
+    rating          = db.Column(db.Integer, nullable=False)
+    review          = db.Column(db.String, nullable=False)
 
-class Movies(db.Model):
-    __tablename__  = "movies"
-    id             = db.Column(db.Integer, primary_key=True)
-    name           = db.Column(db.String, nullable=False)
-    year           = db.Column(db.String, nullable=False)
-    description    = db.Column(db.String, nullable=False)
-    image          = db.Column(db.String, nullable=False)
+    def __init__(self, username, isbn, rating, review):
+        self.username   = username
+        self.isbn       = isbn
+        self.rating     = rating
+        self.review     = review
 
-    def __init__(self, name, year, description, image):
-        self.name           = name
-        self.year           = year
-        self.description    = description
-        self.image          = image
+    def __repr__(self):
+        return '<Review %r>' % self.review
 
 db.create_all()
 
