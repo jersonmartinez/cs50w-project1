@@ -132,6 +132,7 @@ function UpdateMyBooks(isbn, title, author, year) {
     $('#update_data_isbn').html('<i class="fas fa-key"></i> <b>ISBN: </b>' + isbn);
     
     $('#panel_review_book_title').val(isbn);
+    $('#update_data_isbn_value').val(isbn);
     $('#update_book_title').val(title);
     $('#update_book_author').val(author);
     $('#update_book_year').val(year);
