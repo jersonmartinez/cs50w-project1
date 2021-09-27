@@ -159,7 +159,7 @@ def get_all_reviews_by_book():
 
     print("Algo: " + isbn)
 
-    reviews = db.execute("SELECT * FROM reviews WHERE isbn=:isbn LIMIT 50", {"isbn": isbn}).fetchall()
+    reviews = db.execute("SELECT * FROM reviews WHERE isbn=:isbn ORDER BY id DESC;", {"isbn": isbn}).fetchall()
     db.commit()
 
     if not reviews:
