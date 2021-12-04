@@ -78,9 +78,6 @@ $(document).ready(function () {
         }
     });
 
-    $(".mis_libros").click(function () {
-        renderHTML("/mis_libros");
-    });
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -94,52 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
-
-function renderHTMLs(ruta){
-    let request = new XMLHttpRequest();
-    request.open('GET', ruta);
-
-    request.onload = function(){
-        if(request.status == 200){
-            let res = request.responseText;
-            let content = document.getElementById('contenidoDinamico');
-            content.innerHTML = res;
-
-            history.pushState(document.textContent, ruta, ruta);
-
-            return false;
-        } else {
-            console.log('Algo ha salido mal');
-        }
-    }
-
-    request.send();
-}
-
-function agregar(form) {
-    let data = new FormData(form);
-    let request = new XMLHttpRequest();
-    request.open("POST", "/agregar");
-    request.onload = function () {
-        if (request.status == 200) {
-            document.querySelectorAll("input").forEach(input => {
-                input.value = "";
-            });
-            alert("Agregado con exito")
-            let res = request.responseText;
-            let content = document.getElementById("contenidoDinamico");
-            content.innerHTML = res;
-            history.pushState(document.textContent, ruta, ruta);
-            return false;
-        }
-        else {
-            alert("Ups.. Algo salió mal, no te preocupes, no es culpa tuya.")
-            return false;
-        }
-
-    };
-    request.send(data);
-}
 
 function sendFormLogin() {
     var username = $('#login_username'),
@@ -158,7 +109,7 @@ function sendFormLogin() {
                         toastr["success"]("Usted ha iniciado sesión con éxito", "Satisfactorio");
                         setTimeout(function () {
                             window.location.href = "/";
-                        }, 2000);
+                        }, 1000);
                     } else if (datos == "incorrect_username") {
                         username.focus();
                         toastr["info"]("El usuario no existe", "Usuario");
@@ -207,12 +158,10 @@ function sendFormSignin() {
                 success: function (datos) {
                     if (datos == "Ok") {
                         $('#FormAdminSignin').trigger("reset");
-                        setTimeout(function () {
-                            $('#signin').modal('toggle');
-                        }, 1000);
+                        
                         setTimeout(function () {
                             window.location.href = "/";
-                        }, 3000);
+                        }, 2000);
                         toastr["success"]("¡Usted ha sido registrado!", "Satisfactorio");
                     } else if (datos == "user_exists") {
                         $('#signin_username').focus();
@@ -221,15 +170,13 @@ function sendFormSignin() {
                         $('#signin_email').focus();
                         toastr["info"]("Este correo electrónico ya existe", "Correo electrónico");
                     } else {
-                        $('#messageModalValidationFormLogin').html("<i class='fa fa-info'></i> Está comprobado de que somos humanos y cometemos errores, inténtelo más tarde.");
-                        openModal('btnModalValidationFormLogin');
+                        toastr["info"]("Está comprobado de que somos humanos y cometemos errores", "Intente más tarde");
                     }
                 }
             });
         }
     } else {
-        $('#messageModalValidationFormLogin').html('Con una rica taza de café no se nos escapa ningún campo, rellénelos todos con sus datos.');
-        openModal('btnModalValidationFormLogin');
+        toastr["info"]("Con una rica taza de café no se nos escapa ningún campo.", "Rellene todos los campos");
     }
 }
 

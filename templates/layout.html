@@ -5,318 +5,173 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Crashell {% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='libs/fontawesome/css/all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/custom/css/global.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/toastr/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='libs/custom/css/scroll-to-top.css') }}">
-    <script src="{{ url_for('static', filename='libs/jquery/jquery-3.6.0.min.js') }}"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='libs/assets/vendor/nucleo/css/nucleo.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='libs/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='libs/assets/css/argon.css') }}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+
 </head>
 
 <body>
 
-    <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav id="navbar-main" class="navbar navbar-horizontal navbar-transparent navbar-main navbar-expand-lg navbar-light">
         <div class="container">
-            <div class="d-block d-sm-block d-md-none">
-                <a class="navbar-brand cursor-pointer text-light" href="#">
-                    <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}" class="img-fluid" alt="Crashell">
-                </a>
-            </div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <div class="d-none d-sm-none d-md-block">
-                    <a class="navbar-brand" href="#">
-                        <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}" alt="Antonio Moreno" />
-                    </a>
+            <a class="navbar-brand" href="dashboard.html">
+                <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse"
+                aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse navbar-custom-collapse collapse" id="navbar-collapse">
+                <div class="navbar-collapse-header">
+                    <div class="row">
+                        <div class="col-6 collapse-brand">
+                            <a href="dashboard.html">
+                                <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}">
+                            </a>
+                        </div>
+                        <div class="col-6 collapse-close">
+                            <button type="button" class="navbar-toggler" data-toggle="collapse"
+                                data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                                <span></span>
+                                <span></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <li class="nav-item active">
-                        <a class="nav-link text-light" href="" data-toggle="modal" data-target="#login">
-                            <i class="fa fa-home"></i> Iniciar sesión
-                            <span class="sr-only">(current)</span>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="./" class="nav-link">
+                            <span class="nav-link-inner--text">Iniciar sesión</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="" data-toggle="modal" data-target="#signin">
-                            <i class="fas fa-briefcase"></i> Regístrate
+                        <a href="./registrarse" class="nav-link">
+                            <span class="nav-link-inner--text">Registrarse</span>
                         </a>
                     </li>
-                </form>
+                </ul>
+                <hr class="d-lg-none" />
+                <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-icon" href="https://www.youtube.com/gvideosmtutorialesgm"
+                            target="_blank" data-toggle="tooltip" data-original-title="Follow us on YouTube Channel">
+                            <i class="fab fa-youtube"></i>
+                            <span class="nav-link-inner--text d-lg-none">YouTube</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-icon" href="https://twitter.com/antoniomorenosm" target="_blank"
+                            data-toggle="tooltip" data-original-title="Follow us on Twitter">
+                            <i class="fab fa-twitter-square"></i>
+                            <span class="nav-link-inner--text d-lg-none">Twitter</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-icon" href="https://github.com/jersonmartinez/" target="_blank"
+                            data-toggle="tooltip" data-original-title="Star us on Github">
+                            <i class="fab fa-github"></i>
+                            <span class="nav-link-inner--text d-lg-none">GitHub</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
-    <div class="container my-4 py-4"></div>
-
-    <main class="container my-4" role="main">
-
-        <div class="row">
-            <div class="col-md-12 col-lg-12">
-                <div class="card web50-card-dark">
-                    <h5 class="card-header">¿Estás buscando un libro?</h5>
-                    <div class="card-body">
-                        <h5 class="card-title">¡Hola 👋, soy Antonio y déjame guiarte!</h5>
-                        <p class="card-text">
-                            Usualmente, en la búsqueda de libros, se busca por título, autor o temática.
-                        </p>
+    <div class="main-content">
+        <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
+            <div class="container">
+                <div class="header-body text-center mb-7">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-5 col-lg-6 col-md-8 px-5">
+                            <h1 class="text-white">¡Bienvenido!</h1>
+                            <p class="text-lead text-white">No es que no haya dinero, es que no hay buena administración.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="mt-5"></div>
-
-        {% block main %} {% endblock %}
-
-        <div class="row">
-            {% for dict_item in Dict_Phrases %} {% for key, value in dict_item.items() %}
-            <div class="col-md-6 mx-auto mt-3">
-                <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
-                    <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-book text-white"></i>
-                    </div>
-                    <p class="mb-0 mt-2 font-italic">"{{key}}"</p>
-                    <footer class="blockquote-footer pt-4 mt-4 border-top">Someone famous in
-                        <cite title="Source Title">{{value}}</cite>
-                    </footer>
-                </blockquote>
-            </div>
-            {% endfor %} {% endfor %}
-        </div>
-
-
-        <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="FormAdminLogin">
-                        <div class="modal-header">
-                            <div class="container d-flex pl-0"><img
-                                    src="{{ url_for('static', filename='images/logo/favicon.png') }}">
-                                <h5 class="modal-title ml-2" id="signinLabel">Inicia sesión</h5>
+        <div class="container mt--8 pb-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-7">
+                    <div class="card bg-secondary border-0 mb-0">
+                        <div class="card-body px-lg-5 py-lg-5">
+                            <div class="text-center text-muted mb-4">
+                                <img src="{{ url_for('static', filename='images/logo/logo.png') }}"><br/>
                             </div>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-        
-                        <div class="modal-body">
-                            <p class="text-muted">¡Haz un poco de memoria! 😉</p>
-        
-                            <label for="login_username">Nombre de usuario</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Nombre de usuario" id="login_username"
-                                    aria-label="login_username" aria-describedby="login_username">
-                            </div>
-                            <label for="login_password">Contraseña</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
-                                </div>
-                                <input type="password" class="form-control" placeholder="Contraseña" id="login_password"
-                                    aria-label="login_password" aria-describedby="login_password">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" id="login_submit" class="btn btn-dark text-light">Iniciar sesión</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Modal Signin -->
-        <div class="modal fade" id="signin" tabindex="-1" role="dialog" aria-labelledby="signinLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="FormAdminSignin">
-                        <div class="modal-header">
-                            <div class="container d-flex pl-0"><img
-                                    src="{{ url_for('static', filename='images/logo/favicon.png') }}">
-                                <h5 class="modal-title ml-2" id="signinLabel">Regístrate</h5>
-                            </div> <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                                    aria-hidden="true">&times;</span> </button>
-                        </div>
-                        <div class="modal-body">
-                            <p class="text-muted">¡Estupendo! En cuanto acabe el registro, puede iniciar sesión para disfrutar
-                                de sus libros favoritos 🤓</p>
-        
-                            <label for="signin_nickname">Apodo</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-check" aria-hidden="true"></i></span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="¿Cómo quieres que te llamen tus fans?"
-                                    id="signin_nickname" aria-label="signin_nickname" aria-describedby="signin_nickname"
-                                    required />
-                            </div>
-        
-                            <div class="row">
-                                <div class="col-md-6 col-12">
-                                    <label for="signin_username">Nombre de usuario</label>
-                                    <div class="input-group mb-3">
+                            <form role="form" id="FormAdminLogin">
+                                <div class="form-group mb-3">
+                                    <div class="input-group input-group-merge input-group-alternative">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                            <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
                                         </div>
-                                        <input type="text" class="form-control" placeholder="Nombre de usuario"
-                                            id="signin_username" aria-label="signin_username" aria-describedby="signin_username"
-                                            required />
+                                        <input class="form-control" id="login_username" placeholder="Nombre de usuario" type="text">
                                     </div>
                                 </div>
-        
-                                <div class="col-md-6 col-12">
-                                    <label for="signin_password">Contraseña</label>
-                                    <label class="label-ShowFieldsKeys"
-                                        onclick="javascript: ShowFieldsKeys()">Recomendar</label>
-                                    <div class="input-group mb-3">
+                                <div class="form-group">
+                                    <div class="input-group input-group-merge input-group-alternative">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i></span>
+                                            <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                         </div>
-                                        <input type="password" class="form-control" placeholder="Contraseña"
-                                            id="signin_password" aria-label="signin_password" aria-describedby="signin_password"
-                                            required />
+                                        <input class="form-control" id="login_password" placeholder="Contraseña" type="password">
                                     </div>
                                 </div>
-                            </div>
-        
-                            <label for="signin_email">Email</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+                                <div class="custom-control custom-control-alternative custom-checkbox">
+                                    <input class="custom-control-input" id="customCheckLogin" type="checkbox">
+                                    <label class="custom-control-label" for=" customCheckLogin">
+                                        <span class="text-muted">Recuérdame</span>
+                                    </label>
                                 </div>
-                                <input type="email" class="form-control" placeholder="Dirección de correo" id="signin_email"
-                                    aria-label="signin_email" aria-describedby="signin_email" required />
-                            </div>
-        
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-primary my-4">Iniciar sesión</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" id="signin_submit" class="btn btn-dark text-light">Registrar ahora</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <input type="hidden" id="btnModalValidationFormLogin" class="btn mr-2 mb-2 btn-primary" data-toggle="modal"
-            data-target="#modalValidationFormLogin" />
-        
-        <div class="modal fade show" id="modalValidationFormLogin" tabindex="-1" role="dialog"
-            aria-labelledby="modalValidationFormLoginLabel" aria-modal="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalValidationFormLoginLabel">Verificación de credenciales</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="mb-0" id="messageModalValidationFormLogin">...</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">De acuerdo</button>
                     </div>
                 </div>
             </div>
         </div>
-
-    </main>
-
-    <footer>
-
-        <div class="bt">
-            <div class="elementor-shape divider flip-x injected-svg bg-divider-darker" data-negative="false">
-                <svg class="bg-divider-darker" xmlns="http://www.w3.org/2000/svg" viewBox="0 2 1000 100" preserveAspectRatio="none">
-                        <path class="elementor-shape-fill" style="box-sizing: unset !important;"
-                            d="M421.9,6.5c22.6-2.5,51.5,0.4,75.5,5.3c23.6,4.9,70.9,23.5,100.5,35.7c75.8,32.2,133.7,44.5,192.6,49.7 c23.6,2.1,48.7,3.5,103.4-2.5c54.7-6,106.2-25.6,106.2-25.6V0H0v30.3c0,0,72,32.6,158.4,30.5c39.2-0.7,92.8-6.7,134-22.4 c21.2-8.1,52.2-18.2,79.7-24.2C399.3,7.9,411.6,7.5,421.9,6.5z">
-                        </path>
-                    </svg>
-            </div>
-        </div>
-
-        <div class="container-fluid bg-cs-darker">
-            <div class="container py-1">
-                <div class="row cs-footer text-center py-lg-10 pt-3 pb-5">
-                    <div class="col-12">
-                        <img src="{{ url_for('static', filename='images/logo/w-logo.png') }}" class="img-fluid" alt="Crashell">
-                    </div>
-                    <!-- Desktop -->
-                    <div class="d-none d-sm-none d-md-block" style="width: 100%;">
-                        <div class="col-12 mt-4">
-                            <ul class="cs-footer-nav">
-                                <li class="px-2">
-                                    <a href="./" class="cs-link"> <i class="cs-icon fa fa-home"></i> Iniciar sesión</a>
-                                </li>
-                                <li class="px-2">
-                                    <a href="./" class="cs-link"> <i class="cs-icon fa fa-home"></i> Regístrate</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Mobile -->
-                    <div class="d-block d-sm-block d-md-none" style="width: 100%;">
-                        <ul class="cs-footer-nav">
-                            <div class="row">
-                                <div class="col-12">
-                                    <li class="mt-3 p-2 bg-cs-dark rounded">
-                                        <a href="" data-toggle="modal" data-target="#login" class="cs-link"> <i class="cs-icon fa fa-home"></i> Iniciar sesión</a>
-                                    </li>
-                                </div>
-                                <div class="col-12">
-                                    <li class="mt-3 p-2 bg-cs-dark rounded">
-                                        <a href="" data-toggle="modal" data-target="#signin" class="cs-link"> <i class="cs-icon fas fa-briefcase"></i> Regístrate</a>
-                                    </li>
-                                </div>
-                            </div>
-                        </ul>
-                    </div>
-
-                    <div class="col-12 mt-4">
-                        <ul class="cs-social-list">
-                            <li>
-                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-github" target="_blank" rel="noopener noreferrer" href="https://github.com/jersonmartinez/">
-                                </a>
-                            </li>
-                            <li>
-                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-twitter" target="_blank" rel="noopener noreferrer" href="https://twitter.com/antoniomorenosm"></a>
-                            </li>
-                            <li>
-                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-linkedin-in" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/jersonmartinezsm/"></a>
-                            </li>
-                            <li>
-                                <a class="icon icon-sm icon-circle icon-circle-md icon-cs-light fab fa-youtube" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/gvideosmtutorialesgm"></a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-md-12 mt-4">
-                        <small class="text-light">
-                            Todos los derechos reservados
-                        </small>
+    </div>
+    <footer class="py-5" id="footer-main">
+        <div class="container">
+            <div class="row align-items-center justify-content-xl-between">
+                <div class="col-xl-12">
+                    <div class="copyright text-center text-muted">
+                        &copy; 2021 <a href="https://www.crashell.com" class="font-weight-bold ml-1"
+                            target="_blank">Crashell</a>
                     </div>
                 </div>
             </div>
         </div>
-
     </footer>
 
     <a href="#" class="scroll-top text-center" id="ScrollToTop">
         <i class="fas fa-angle-double-up"></i>
     </a>
 
-    <script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/vendor/js-cookie/js.cookie.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/vendor/chart.js/dist/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/vendor/chart.js/dist/Chart.extension.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/assets/js/argon.js') }}"></script>
+
     <script src="{{ url_for('static', filename='libs/toastr/js/toastr.js') }}"></script>
     <script src="{{ url_for('static', filename='libs/custom/js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='libs/custom/js/dashboard.js') }}"></script>
+
 </body>
 
 </html>
