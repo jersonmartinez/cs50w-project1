@@ -23,9 +23,166 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+tags_and_subtags = {
+    'Hogar': [
+        'Construcción y Remodelación',
+        'Artículos para el Hogar',
+        'Mascotas',
+        'Limpieza y Mantenimiento',
+        'Muebles y Aparatos Eléctricos',
+        'Renta y Compra',
+        'Servicios Públicos',
+        'Teléfono Celular',
+        'Otros Hogar'
+    ],
+    'Alimentos': [
+        'Despensa',
+        'Restaurante',
+        'Otros Alimentos'
+    ],
+    'Entretenimiento': [
+        'Cine y Música',
+        'Juguetes y Videojuegos',
+        'Museos y Parques',
+        'Suscripciones y Apps',
+        'Bares y Restaurantes',
+        'Alcohol y Tabaco',
+        'Espectáculos y Eventos',
+        'Otros Entretenimiento',
+    ],
+    'Salud y Belleza': [
+        'Perfumes y Cosméticos',
+        'Salón de belleza',
+        'Dentista',
+        'Ejercicio y Deportes',
+        'Farmacia',
+        'Médico',
+        'Cuidado Personal',
+        'Otros Salud y Belleza'
+    ],
+    'Auto y Transporte': [
+        'Automóvil y Motocicleta',
+        'Mantenimiento y Refacciones',
+        'Autolavado',
+        'Transporte Público',
+        'Gasolina',
+        'Taxi',
+        'Casetas',
+        'Estacionamiento',
+        'Otros Auto y Transporte'
+    ],
+    'Educación y Trabajo': [
+        'Correo',
+        'Servicios Legales',
+        'Servicios Contables',
+        'Otros Educación y Trabajo',
+        'Colegiatura',
+        'Papelería',
+        'Libros',
+        'Software',
+        'Otros Servicios Profesionales'
+    ],
+    'Regalos y Ayuda': [
+        'Donaciones',
+        'Apoyo a Familiares y Amigos',
+        'Regalos',
+        'Otros Regalos y Ayuda'
+    ],
+    'Viajes': [
+        'Seguros y Fianzas',
+        'Impuestos',
+        'Servicios Financieros',
+        'Créditos',
+        'Ahorro e Inversiones',
+        'Otros Finanzas e Impuestos'
+    ],
+    'Finanzas e Impuestos': [
+        'Seguros y Fianzas',
+        'Impuestos',
+        'Servicios Financieros',
+        'Créditos',
+        'Ahorro e Inversiones',
+        'Otros Finanzas e Impuestos'
+    ],
+    'Ropa y Calzado': [
+        'Calzado',
+        'Accesorios',
+        'Lavandería y Tintorería',
+        'Ropa',
+        'Otra Ropa'
+    ],
+    'Transacciones bancarias': [
+        'Pago Tarjeta de Crédito',
+        'Cheques',
+        'Cajero automático',
+        'Transferencias',
+        'Otros Transacciones Bancarias'
+    ],
+    'Ingresos': [
+        'Préstamos',
+        'Bonos',
+        'Reembolsos y Devoluciones',
+        'Sueldo',
+        'Rentas',
+        'Inversiones',
+        'Otros Ingresos'
+    ]
+}
+
+parameters_tags_and_subtags = {
+    'Hogar': [
+        'red',
+        'fa fa-home'
+    ],
+    'Alimentos': [
+        'primary',
+        'fas fa-utensils'
+    ],
+    'Entretenimiento': [
+        'dark',
+        'fa fa-gamepad'
+    ],
+    'Salud y Belleza': [
+        'info',
+        'fa fa-medkit'
+    ],
+    'Auto y Transporte': [
+        'danger',
+        'fa fa-car'
+    ],
+    'Educación y Trabajo': [
+        'default',
+        'fa fa-university'
+    ],
+    'Regalos y Ayuda': [
+        'warning',
+        'fa fa-gift'
+    ],
+    'Viajes': [
+        'info',
+        'fa fa-plane'
+    ],
+    'Finanzas e Impuestos': [
+        'success',
+        'ni ni-money-coins'
+    ],
+    'Ropa y Calzado': [
+        'warning',
+        'fa fa-shopping-cart'
+    ],
+    'Transacciones bancarias': [
+        'success',
+        'fa fa-credit-card'
+    ],
+    'Ingresos': [
+        'success',
+        'ni ni-money-coins'
+    ],
+}
+
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("index.html", tags_and_subtags=tags_and_subtags, parameters_tags_and_subtags=parameters_tags_and_subtags)
 
 @app.route('/registrarse')
 def registrarse():
@@ -33,11 +190,11 @@ def registrarse():
 
 @app.route('/movimientos')
 def movimientos():
-    return render_template("movimientos.html")
+    return render_template("movimientos.html", tags_and_subtags=tags_and_subtags, parameters_tags_and_subtags=parameters_tags_and_subtags)
 
 @app.route('/categorias')
 def categorias():
-    return render_template("categorias.html")
+    return render_template("categorias.html", tags_and_subtags=tags_and_subtags, parameters_tags_and_subtags=parameters_tags_and_subtags)
 
 @app.route('/preferencias')
 def preferencias():
@@ -91,19 +248,53 @@ def logout():
     session.clear()
     return redirect("/")
 
-@app.route("/get_my_books", methods=["POST", "GET"])
-def get_my_books():
-    books = db.execute("SELECT * FROM books;").fetchall()
+@app.route("/get_accounts", methods=["POST", "GET"])
+def get_accounts():
+    accounts = db.execute("SELECT * FROM account WHERE username=:username ORDER BY id DESC;", {"username": session['username']}).fetchall()
 
-    if not books:
-        return 'there_is_not_records'
+    if not accounts:
+        return json.dumps('there_is_not_records')
     else:
         row = []
 
-        for item in books:
-            row.append([item['isbn'], item['title'], item['author'] , item['year'], item['isbn']])
+        for item in accounts:
+            row.append(
+                {
+                    'id': item['id'], 
+                    'currency': item['currency'], 
+                    'name': item['name'], 
+                    'amount': item['amount'], 
+                    'description': item['description']
+                }
+            )
 
-        return json.dumps( row )
+        return json.dumps(row)
+
+@app.route("/get_movements", methods=["POST", "GET"])
+def get_movements():
+    movements = db.execute("SELECT * FROM movements WHERE username=:username ORDER BY id DESC;", {"username": session['username']}).fetchall()
+
+    if not movements:
+        return json.dumps('there_is_not_records')
+    else:
+        row = []
+
+        for item in movements:
+
+            row.append(
+                {
+                    'id': item['id'],
+                    'account': item['account'],
+                    'date': item['date'],
+                    'tag': item['tag'],
+                    'type_charge': item['type_charge'],
+                    'currency': item['currency'],
+                    'amount': item['amount'],
+                    'description': item['description']
+                }
+            )
+
+        return json.dumps(row)
 
 def get_recent_books():
     books = db.execute("SELECT * FROM books ORDER BY year DESC LIMIT 9").fetchall()
@@ -119,25 +310,27 @@ def get_old_books():
     else:
         return books
 
-@app.route("/update_book", methods=['POST'])
-def update_book():
-    isbn    = request.form.get('isbn')
-    title   = request.form.get('title')
-    author  = request.form.get('author')
-    year    = request.form.get('year')
+@app.route("/update_account", methods=['POST'])
+def update_account():
+    id = request.form.get('id')
+    name = request.form.get('name')
+    amount = request.form.get('amount')
+    description = request.form.get('description')
+    currency = request.form.get('currency')
 
-    result = db.execute("UPDATE books SET title=:title, author=:author, year=:year WHERE isbn=:isbn", {"isbn": isbn, "title": title, "author": author, "year": year})
+    result = db.execute("UPDATE account SET name=:name, amount=:amount, description=:description, currency=:currency WHERE id=:id", {"id": id, "name": name, "amount": amount, "description": description,'currency':currency})
+
     db.commit()
     if not result:
         return 'not_updated'
     else:
         return 'Ok'
 
-@app.route("/delete_book", methods=['POST'])
-def delete_book():
-    isbn = request.form.get('isbn')
+@app.route("/delete_account", methods=['POST'])
+def delete_account():
+    id = request.form.get('id')
 
-    result = db.execute("DELETE FROM books WHERE isbn=:isbn", {"isbn": isbn})
+    result = db.execute("DELETE FROM account WHERE id=:id", {"id": id})
     db.commit()
     
     if not result:
@@ -145,13 +338,14 @@ def delete_book():
     else:
         return 'Ok'
 
-@app.route("/add_review", methods=['POST'])
-def add_review():
-    isbn    = request.form.get('isbn')
-    review  = request.form.get('review')
-    stars   = request.form.get('stars')
+@app.route("/create_account", methods=['POST'])
+def create_account():
+    name            = request.form.get('name')
+    amount          = request.form.get('amount')
+    description     = request.form.get('description')
+    currency        = request.form.get('currency')
 
-    result = db.execute("INSERT INTO reviews (username, isbn, review, rating) VALUES (:username, :isbn, :review, :rating)", {"username": session["username"], "isbn": isbn, "review": review, "rating": stars})
+    result = db.execute("INSERT INTO account (username, currency, name, amount, description) VALUES (:username, :currency, :name, :amount, :description)", {"username": session["username"], "currency": currency, "name": name, "amount": amount, "description": description})
     db.commit()
 
     if not result:
@@ -159,6 +353,23 @@ def add_review():
     else:
         return 'Ok'
 
+@app.route("/create_movement", methods=['POST'])
+def create_movement():
+    type_charge     = request.form.get('type_charge')
+    account         = request.form.get('account')
+    tag             = request.form.get('tag')
+    date            = request.form.get('date')
+    amount          = request.form.get('amount')
+    description     = request.form.get('description')
+    currency        = request.form.get('currency')
+
+    result = db.execute("INSERT INTO movements (username, type_charge, account, tag, date, amount, description, currency) VALUES (:username, :type_charge, :account, :tag, :date, :amount, :description, :currency)", {"username": session["username"], "type_charge": type_charge, "account": account, "tag": tag, "date": date, "amount": amount, "description": description, "currency": currency})
+    db.commit()
+
+    if not result:
+        return 'not_added'
+    else:
+        return 'Ok'
 
 @app.route("/get_all_reviews_by_book", methods=["POST"])
 def get_all_reviews_by_book():

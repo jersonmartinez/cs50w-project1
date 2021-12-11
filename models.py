@@ -10,19 +10,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
-class Books(db.Model):
-    __tablename__   = "books"
-    isbn            = db.Column(db.String, primary_key=True)
-    title           = db.Column(db.String, nullable=False)
-    author          = db.Column(db.String, nullable=False)
-    year            = db.Column(db.String, nullable=False)
-
-    def __init__(self, isbn, title, author,year):
-        self.isbn   = isbn
-        self.title  = title
-        self.author = author
-        self.year   = year
-
 class UserInfo(db.Model):
     __tablename__   = "users_info"
     username        = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
@@ -50,22 +37,49 @@ class Users(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-class Reviews(db.Model):
-    __tablename__   = "reviews"
+class Account(db.Model):
+    __tablename__   = "account"
     id              = db.Column(db.Integer, primary_key=True)
     username        = db.Column(db.String, nullable=False)
-    isbn            = db.Column(db.String, nullable=False)
-    rating          = db.Column(db.Integer, nullable=False)
-    review          = db.Column(db.String, nullable=False)
+    currency        = db.Column(db.String, nullable=False)
+    name            = db.Column(db.String, nullable=False)
+    amount          = db.Column(db.String, nullable=False)
+    description     = db.Column(db.String, nullable=False)
 
-    def __init__(self, username, isbn, rating, review):
-        self.username   = username
-        self.isbn       = isbn
-        self.rating     = rating
-        self.review     = review
+    def __init__(self, username, currency, name, amount, description):
+        self.username       = username
+        self.currency       = currency
+        self.name           = name
+        self.amount         = amount
+        self.description    = description
 
     def __repr__(self):
-        return '<Review %r>' % self.review
+        return '<description %r>' % self.description
+   
+class Movements(db.Model):
+    __tablename__   = "movements"
+    id              = db.Column(db.Integer, primary_key=True)
+    username        = db.Column(db.String, nullable=False)
+    account         = db.Column(db.String, nullable=False)
+    date            = db.Column(db.Integer, nullable=False)
+    tag             = db.Column(db.String, nullable=False)
+    type_charge     = db.Column(db.String, nullable=False)
+    currency        = db.Column(db.String, nullable=False)
+    amount          = db.Column(db.String, nullable=False)
+    description     = db.Column(db.String, nullable=False)
+
+    def __init__(self, username, account, date, tag, type_charge, currency, amount, description):
+        self.username       = username
+        self.account        = account
+        self.date           = date
+        self.tag            = tag
+        self.type_charge    = type_charge
+        self.currency       = currency
+        self.amount         = amount
+        self.description    = description
+
+    def __repr__(self):
+        return '<description %r>' % self.description
 
 db.create_all()
 

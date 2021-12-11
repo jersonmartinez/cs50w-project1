@@ -1,224 +1,316 @@
-var stars = 0;
+var currency = "";
+var update_currency = "";
+var data_accounts = "";
+var data_movements = "";
+
+Spinner = '<div class="d-flex justify-content-center">' +
+    '   <div class="spinner-border text-warning" style="margin-top: 20px; margin-bottom: 50px;" role="status" id="spinner_status_loading_accounts">' +
+    '       <span class="sr-only">Cargando datos...</span>' +
+    '   </div>' +
+    '</div>';
 
 $(document).ready(function() {
-    /*Capture event button submit for Login*/
-    $('#update_book_submit').click(() => {
-        sendFormUpdateBook();
+
+    change_badge_type($('#cb-badge-create-account').is(':checked'));
+    update_badge_type($('#cb-badge-update-account').is(':checked'));
+    // getAccounts();
+
+    $('#cb-badge-create-account').click(() => {
+        change_badge_type($('#cb-badge-create-account').is(':checked'));
     });
 
-    $('#add_review_submit').click(() => {
-        sendFormAddReview();
+    $('#cb-badge-update-account').click(() => {
+        console.log("click");
+        update_badge_type($('#cb-badge-update-account').is(':checked'));
     });
+
+    $("#amount_account").keyup(function() {
+        this.value = this.value.replace(/[^0-9\.]/g,'');
+    });
+
+    $("#update_amount_account").keyup(function() {
+        this.value = this.value.replace(/[^0-9\.]/g,'');
+    });
+
+    /*Capture event button submit for create account*/
+    $('#create_account_submit').click(() => {
+        createAccount();
+    });
+
+    var FormCreateAccount = document.getElementById('FormCreateAccount');
+    if (FormCreateAccount !== null)
+        FormCreateAccount.addEventListener('keypress', eventFormCreateAccount);
+
+    function eventFormCreateAccount(e) {
+        if (e.which == 13)
+            createAccount();
+    }
+
+    /*Capture event button submit for update account*/
+    $('#delete_account_submit').click(() => {
+        deleteAccount();
+    });
+    
+    $('#update_account_submit').click(() => {
+        updateAccount();
+    });
+
+    var FormUpdateAccount = document.getElementById('FormUpdateAccount');
+    if (FormUpdateAccount !== null)
+        FormUpdateAccount.addEventListener('keypress', eventFormUpdateAccount);
+
+    function eventFormUpdateAccount(e) {
+        if (e.which == 13)
+            updateAccount();
+    }
+
+    var FormUpdateMovement = document.getElementById('FormUpdateMovement');
+    if (FormUpdateMovement !== null)
+        FormUpdateMovement.addEventListener('keypress', eventFormUpdateMovement);
+
+    function eventFormUpdateMovement(e) {
+        if (e.which == 13)
+            updateMovement();
+    }
+
+    $('#update_movement_submit').click(() => {
+        updateMovement();
+    });
+    
+    var FormCreateMovement = document.getElementById('FormCreateMovement');
+    if (FormCreateMovement !== null)
+        FormCreateMovement.addEventListener('keypress', eventFormCreateMovement);
+
+    function eventFormCreateMovement(e) {
+        if (e.which == 13)
+            createMovement();
+    }
+
+    $('#create_movement_submit').click(() => {
+        createMovement();
+    });
+
+    $("#amount_movement").keyup(function () {
+        this.value = this.value.replace(/[^0-9\.]/g, '');
+    });
+
+    $("#update_amount_movement").keyup(function () {
+        this.value = this.value.replace(/[^0-9\.]/g, '');
+    });
+
+    
 });
 
-function getMyBooks() {
+// chooseWayURLTags();
 
-    $("#main_dashboard").html("" +
-        '<div class="card">' +
-        '    <div class="card-header">' +
-        '        Mis libros' +
-        '    </div>' +
-        '    <div class="card-body">' +
-        '        <table id="example" class="table table-hover table-striped table-bordered" width="100%"></table>' +
-        '        <div class="d-flex justify-content-center">' +
-        '           <div class="spinner-border text-primary" role="status" id="spinner_status_loading_my_books">' +
-        '               <span class="sr-only">Cargando datos...</span>' +
-        '           </div>' +
+function getDomain() {
+    let url_hostname = 'https://www.factible.io/',
+        hostname = document.location.hostname;
+
+    if (hostname == '127.0.0.1' || hostname == 'localhost')
+        url_hostname = 'http://127.0.0.1:5000/';
+
+    return url_hostname;
+}
+
+function chooseWayURLTags() {
+    var filtered_url = (window.location.href).split("/").filter(function (el) {
+        return el != "";
+    });
+
+    var filtered_getDomain = (getDomain()).split("/").filter(function (el) {
+        return el != "";
+    });
+
+    for (let x = 0; x < filtered_url.length; x++) {
+        for (let i = 0; i < filtered_getDomain.length; i++) {
+            if (filtered_url[i] == filtered_getDomain[i]) {
+                filtered_url.shift();
+                filtered_getDomain.shift();
+            }
+        }
+    }
+
+    // console.log(filtered_url);
+    // console.log(filtered_getDomain);
+
+    // if (filtered_url[0] == 'estudio') {
+    //     showDataAllTagsAndSubTagsSideBar();
+
+    //     if (filtered_url[1] == 'tag') {
+    //         if (filtered_url.length == 3) {
+    //             if (filtered_url[2] != '') {
+    //                 // console.log("He accedido a getDataSubTagsByTag: " + filtered_url[2]);
+    //                 getDataSubTagsByTag(filtered_url[2]);
+    //             } else {
+    //                 // console.log("He accedido a showDataAllTagsAndSubTagsContainer");
+    //                 showDataAllTagsAndSubTagsContainer();
+    //             }
+    //         } else {
+    //             // console.log("He accedido a showDataAllTagsAndSubTagsContainer");
+    //             showDataAllTagsAndSubTagsContainer();
+    //         }
+    //     } else {
+    //         // console.log("He accedido a getAllTagsByIDArticle");
+    //         getAllTagsByIDArticle();
+    //     }
+    // }
+}
+
+function getAccounts() {
+    
+    Initial = '<div class="card-header border-0">' +
+        '    <div class="row align-items-center">' +
+        '        <div class="col">' +
+        '            <h3 class="mb-0">Cuentas</h3>' +
+        '        </div>' +
+        '        <div class="col text-right">' +
+        '            <!-- <a href="#!" class="btn btn-sm btn-primary">Ver todo</a> -->' +
         '        </div>' +
         '    </div>' +
-        '</div>' 
-    );
+        '</div>';
+        
+    TableInit = '<div class="table-responsive">' +
+        '    <table class="table align-items-center table-flush">' +
+        '        <thead class="thead-light">' +
+        '            <tr>' +
+        '                <th scope="col">Nombre</th>' +
+        '                <th scope="col">Divisa</th>' +
+        '                <th scope="col">Saldo Inicial</th>' +
+        '                <th scope="col">Saldo Actual</th>' +
+        '                <th scope="col">Descripción</th>' +
+        '                <th scope="col">Estado</th>' +
+        '            </tr>' +
+        '        </thead>' +
+        '        <tbody>';
+    
+    TableFinish = '</tbody>' +
+        '    </table>';
+    
+    Finish = '</div>';
 
+    ButtomCreateAccount = '<a href="#" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#modal-notification-nueva-cuenta">Crear una cuenta</a>';
+    
+    $("#dashboard_accounts").html(Initial + Finish + Spinner);
 
+    Data = "";
+        
     $.ajax({
-        url: "/get_my_books",
+        url: "/get_accounts",
         type: "post",
         dataType: 'json',
         contentType: "application/json; charset=UTF-8",
         success: function (datos) {
             if (datos == 'there_is_not_records') {
-                console.log("No hay registros");
+                $("#dashboard_accounts").html("" + Initial + Finish + '<p style="text-align: center; margin-top: 30px; margin-bottom:30px;">No hay cuentas registradas.</p><p style="text-align: center;">' + ButtomCreateAccount + '</p>');
             } else {
-                console.log(datos);
-                $('#spinner_status_loading_my_books').remove();
-                $('#example').DataTable({
-                    data: datos,
-                    autoWidth: true,
-                    'iDisplayLength': 25,
-                    columns: [
-                        { title: "ISBN" },
-                        { title: "Título" },
-                        { title: "Autor" },
-                        { title: "Año de publicación" },
-                        { 'data': null, 
-                            title: 'Gestión', 
-                            wrap: true, 
-                            "render": function (item) { 
-                                return '' +
-                                '<div class="dropdown show">' +
-                                '    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="actions_list_'+ item[0] +'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-                                '        <i class="fas fa-tools"></i> Acciones' +
-                                '    </a>' +
-                                '    <div class="dropdown-menu" aria-labelledby="actions_list_'+ item[0] +'">' +
-                                    '        <a class="dropdown-item" href="#" onclick="javascript: UpdateMyBooks(\'' + item[0] + '\', \'' + item[1] + '\', \'' + item[2] + '\', \'' + item[3] + '\')"><i class="fas fa-edit"></i> Actualizar</a>' +
-                                    '        <a class="dropdown-item" href="#" onclick="javascript: GetReviewsMyBooks(\'' + item[0] + '\', \'' + item[1] + '\', \'' + item[2] + '\', \'' + item[3] + '\')"><i class="fas fa-quote-right"></i> Reviews</a>' +
-                                '        <a class="dropdown-item" href="#" onclick="javascript: DeleteMyBooks(\'' + item[0] + '\')"><i class="fas fa-trash-alt"></i> Eliminar</a>' +
-                                '    </div>' +
-                                '</div>' +
-                                '' 
-                            } 
-                        },
-                    ],
-                    responsive: true,
-                    language: {
-                        "lengthMenu": "Mostrar _MENU_ registros",
-                        "zeroRecords": "No se encontraron resultados",
-                        "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                        "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-                        "sSearch": "Buscar:",
-                        "oPaginate": {
-                            "sFirst": "Primero",
-                            "sLast": "Último",
-                            "sNext": "Siguiente",
-                            "sPrevious": "Anterior"
-                        },
-                        "sProcessing": "Procesando...",
-                    },
-                    "searching": true,
-                    dom: 'Bfrtilp',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel"></i> ',
-                            titleAttr: 'Exportar a Excel',
-                            className: 'btn btn-success',
-                            messageTop: 'Todas mis libros',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }
-                        },
-                        {
-                            extend: 'pdfHtml5',
-                            text: '<i class="fas fa-file-pdf"></i> ',
-                            titleAttr: 'Exportar a PDF',
-                            className: 'btn btn-danger',
-                            messageTop: 'Todas mis libros',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }
-                        },
-                        {
-                            extend: 'print',
-                            text: '<i class="fa fa-print"></i> ',
-                            titleAttr: 'Imprimir',
-                            className: 'btn btn-info',
-                            messageTop: 'Todas mis libros',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }
-                        },
-                    ],
-                    "order": [[3, "desc"]],
-                });
+                data_accounts = datos;
+                console.log(data_accounts);
+
+                for (var i = 0; i < data_accounts.length; i++) {
+
+                    Data += '<tr onclick="javascript: getAccountById(this);" data-toggle="modal" data-target="#modal-notification-control-cuenta" id="tr_item_account_' + data_accounts[i].id + '" id_account="' + data_accounts[i].id +'" class="tr_list_accounts">' +
+                        '    <th scope="row">' + data_accounts[i].name + '</th>' +
+                        '    <td>' + data_accounts[i].currency + '</td>' +
+                        '    <td>' + data_accounts[i].currency + data_accounts[i].amount + '</td>' +
+                        '    <td>' + data_accounts[i].currency + data_accounts[i].amount + '</td>' +
+                        '    <td>' + data_accounts[i].description + '</td>' +
+                        '    <td>' + '<i class="fas fa-arrow-up text-success mr-3"></i> 00,00%' + '</td>' +
+                        '</tr>';
+                }
+                
+                $("#dashboard_accounts").html(Initial + TableInit + Data + TableFinish + Finish);
             }
         }
     });
 }
 
-function UpdateMyBooks(isbn, title, author, year) {
-    $('#update_data_isbn').html('<i class="fas fa-key"></i> <b>ISBN: </b>' + isbn);
+function getAccountsForMovements() {
+    LabelSelectAccount = '<label for="SelectAccountMovement">Seleccione una cuenta</label>';
+    InitSelectAccount = '<select class="form-control" id="SelectAccountMovement">';
+    FinishSelectAccount = '</select>';
+    OptionDefaultSelectAccount = '<option>Ninguna</option>';
+
+    $("#ListAccountsMovement").html(LabelSelectAccount + Spinner);
     
-    $('#panel_review_book_title').val(isbn);
-    $('#update_data_isbn_value').val(isbn);
-    $('#update_book_title').val(title);
-    $('#update_book_author').val(author);
-    $('#update_book_year').val(year);
-
-    openModal('btnUpdateMyBooks');
-}
-
-function GetReviewsMyBooks(isbn, title, author, year) {
-    $('#panel_review_book_isbn').html('<i class="fas fa-key"></i> <b>ISBN: </b>' + isbn);
-    $('#panel_review_book_isbn_value').val(isbn);
-
-    $('#panel_review_book_title').html(title);
-    $('#panel_review_book_author').html(author);
-    $('#panel_review_book_year').html('<small class="text-muted"><i class="fas fa-clock"></i> ' + year + ' </small>');
-
-    openModal('btnPanelReviews');
-    $("#PanelReviewsShowData").html("No hay reseñas para este libro.");
-
-    // Cargar reviews
-    GetAllReviewsByBook(isbn);
-
-}
-
-function GetAllReviewsByBook(isbn){
-    var InfoPanelReviewsShowData = '';
+    Data = "";
 
     $.ajax({
-        url: "/get_all_reviews_by_book",
-        data: { 'isbn': isbn },
+        url: "/get_accounts",
         type: "post",
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
         success: function (datos) {
             if (datos == 'there_is_not_records') {
-                // console.log("No hay registros");
-            }  else {
-                var data = JSON.parse(datos);
-                
-                for (i = 0; i < data.length; i++) {
-                    InfoPanelReviewsShowData += "" +
-                    '<div class="col-md-12 mb-3">' +
-                    '    <div class="card">' +
-                    '        <div class="card-body">' +
-                    '            <h5 class="card-title"> '
+                return datos;
+            } else {
+                data_accounts = datos;
+                console.log(data_accounts);
 
-                    for (j = 0; j < data[i][2]; j++) {
-                        InfoPanelReviewsShowData += '<i class="fas fa-star"></i>';
-                    }
-                    
-                    for (x = 0; x < (5 - data[i][2]); x++) {
-                        InfoPanelReviewsShowData += '<i class="far fa-star"></i>';
-                    }
-                    InfoPanelReviewsShowData += "" +
-                    '            </h5>' +
-                    '            <p class="card-text">' +
-                    '                <i class="fas fa-user"></i> Escrito por: ' + data[i][1] + ' ' +
-                    '            </p>' +
-                    '            <p class="card-text">' + data[i][3] + '</p>' +
-                    '        </div>' +
-                    '    </div>' +
-                    '</div>'
-
-                    console.log("Nombre de usuario: " + data[i][1]);
+                for (var i = 0; i < data_accounts.length; i++) {
+                    Data += '<option>' + data_accounts[i].name + '</option>';
                 }
 
-                $("#PanelReviewsShowData").html(InfoPanelReviewsShowData);
+                $("#ListAccountsMovement").html(LabelSelectAccount + InitSelectAccount + OptionDefaultSelectAccount + Data + FinishSelectAccount);
             }
         }
     });
 }
 
-function sendFormAddReview(){
-    var review = $('#panel_review_book_comment').val(),
-        isbn = $('#panel_review_book_isbn_value').val();
+function getAccountById(value) {
+    
+    id_account = $(value).attr("id_account");
+    data_label_off = "";
+    data_label_on = "";
 
-    if (stars == 0)
-        stars = 1;
+    for (var i = 0; i < data_accounts.length; i++) {
+        if (data_accounts[i].id == id_account) {
+            update_currency = data_accounts[i].currency;
+            
+            if (data_accounts[i].currency == '$') {
+                data_label_off = 'C$';
+                data_label_on = '$';
+            } else {
+                data_label_off = '$';
+                data_label_on = 'C$';
+            }
 
-    if (review == '') {
-        toastr["info"]("Escriba una reseña", "No tan rápido");
+            data_label_on = data_accounts[i].currency;
+
+            $("#modal-notification-control-cuenta #update_id_account").val(data_accounts[i].id);
+            $("#modal-notification-control-cuenta #update_name_account").val(data_accounts[i].name);
+            $("#modal-notification-control-cuenta #span-update-badge-selected").html(data_accounts[i].currency);
+            $("#modal-notification-control-cuenta #cb-badge-update-account-value").attr('data-label-on', data_label_on);
+            $("#modal-notification-control-cuenta #cb-badge-update-account-value").attr('data-label-off', data_label_off);
+
+            $("#modal-notification-control-cuenta #update_amount_account").val(data_accounts[i].amount);
+            $("#modal-notification-control-cuenta #update_description_account").val(data_accounts[i].description);
+        }
+    }
+
+}
+
+function createAccount(){
+    var name        = $('#name_account').val(),
+        amount      = $('#amount_account').val(),
+        description = $('#description_account').val();
+
+    if (name == '') {
+        toastr["info"]("Identifiquemos la cuenta", "¡No tan rápido!");
+    } else if (amount == '') {
+        toastr["info"]("Indique la cantidad", "¡No tan rápido!");
     } else {
         $.ajax({
-            data: { 'isbn': isbn, 'stars': stars, 'review': review },
-            url: "/add_review",
+            data: { 'name': name, 'amount': amount, 'description': description, 'currency': currency},
+            url: "/create_account",
             type: "post",
             success: function (datos) {
                 if (datos == "Ok") {
-                    toastr["success"]("La reseña ha sido agregada", "Satisfactorio");
-                    $('#panel_review_book_comment').val('');
-                    GetAllReviewsByBook(isbn);
+                    toastr["success"]("La cuenta ha sido creada", "Satisfactorio");
+                    $('#FormCreateAccount').trigger("reset");
+                    
+                    $('#modal-notification-nueva-cuenta').modal('toggle');
+                    getAccounts();
                 } else {
                     toastr["info"]("Intente más tarde", "Oops");
                 }
@@ -227,17 +319,119 @@ function sendFormAddReview(){
     }
 }
 
-function DeleteMyBooks(isbn) {
+function createMovement(){
+    var type_charge = $('input[name="customRadioInline1"]:checked').val(),
+        account     = $('select[name="SelectAccountMovement"] option').filter(':selected').val(),
+        tag         = $('select[name="SelectTagMovement"] option').filter(':selected').val(),
+        date        = $('#SelectDateMovement').val(),
+        amount      = $('#amount_movement').val(),
+        description = $('#description_movement').val();
+
+    if (description == '') {
+        toastr["info"]("Identifiquemos este movimiento", "¡No tan rápido!");
+    } else if (amount == '') {
+        toastr["info"]("Indique la cantidad", "¡No tan rápido!");
+    } else {
+        $.ajax({
+            data: { 'type_charge': type_charge, 'account': account, 'tag':tag, 'date':date, 'amount': amount, 'description': description, 'currency': currency},
+            url: "/create_movement",
+            type: "post",
+            success: function (datos) {
+                if (datos == "Ok") {
+                    toastr["success"]("El movimiento ha sido añadido", "Satisfactorio");
+                    $('#FormCreateMovement').trigger("reset");
+                    
+                    $('#modal-notification-nuevo-movimiento').modal('toggle');
+                    getMovements();
+                } else {
+                    toastr["info"]("Intente más tarde", "Oops");
+                }
+            }
+        });
+    }
+}
+
+function getMovements() {
+
+    Initial = '<div class="card-header border-0">' +
+        '    <div class="row align-items-center">' +
+        '        <div class="col">' +
+        '            <h3 class="mb-0">Movimientos</h3>' +
+        '        </div>' +
+        '        <div class="col text-right">' +
+        '            <!-- <a href="#!" class="btn btn-sm btn-primary">Ver todo</a> -->' +
+        '        </div>' +
+        '    </div>' +
+        '</div>';
+
+    TableInit = '<div class="table-responsive">' +
+        '    <table class="table align-items-center table-flush">' +
+        '        <thead class="thead-light">' +
+        '            <tr>' +
+        '                <th scope="col">Descripción</th>' +
+        '                <th scope="col">Categoría</th>' +
+        '                <th scope="col">Monto</th>' +
+        '                <th scope="col">Cuenta</th>' +
+        '                <th scope="col">Divisa</th>' +
+        '                <th scope="col">Fecha</th>' +
+        '                <th scope="col">Cargo</th>' +
+        '            </tr>' +
+        '        </thead>' +
+        '        <tbody>';
+
+    TableFinish = '</tbody>' +
+        '    </table>';
+
+    Finish = '</div>';
+
+    ButtomCreateMovement = '<a href="#" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#modal-notification-nuevo-movimiento">Crear una cuenta</a>';
+
+    $("#dashboard_movements").html(Initial + Finish + Spinner);
+
+    Data = "";
+
     $.ajax({
-        data: { 'isbn': isbn },
-        url: "/delete_book",
+        url: "/get_movements",
+        type: "post",
+        dataType: 'json',
+        contentType: "application/json; charset=UTF-8",
+        success: function (datos) {
+            if (datos == 'there_is_not_records') {
+                $("#dashboard_movements").html("" + Initial + Finish + '<p style="text-align: center; margin-top: 30px; margin-bottom:30px;">No hay movimientos registrados.</p><p style="text-align: center;">' + ButtomCreateMovement + '</p>');
+            } else {
+                data_movements = datos;
+                console.log(data_movements);
+
+                for (var i = 0; i < data_movements.length; i++) {
+
+                    Data += '<tr onclick="javascript: getAccountById(this);" data-toggle="modal" data-target="#modal-notification-control-cuenta" id="tr_item_account_' + data_movements[i].id + '" id_account="' + data_movements[i].id + '" class="tr_list_accounts">' +
+                        '    <th scope="row">' + data_movements[i].name + '</th>' +
+                        '    <td>' + data_movements[i].currency + '</td>' +
+                        '    <td>' + data_movements[i].currency + data_movements[i].amount + '</td>' +
+                        '    <td>' + data_movements[i].currency + data_movements[i].amount + '</td>' +
+                        '    <td>' + data_movements[i].description + '</td>' +
+                        '    <td>' + '<i class="fas fa-arrow-up text-success mr-3"></i> 00,00%' + '</td>' +
+                        '</tr>';
+                }
+
+                $("#dashboard_movements").html(Initial + TableInit + Data + TableFinish + Finish);
+            }
+        }
+    });
+}
+
+function deleteAccount() {
+    $.ajax({
+        data: { 'id': $('#update_id_account').val() },
+        url: "/delete_account",
         type: "post",
         success: function (datos) {
             if (datos == "Ok") {
-                toastr["success"]("El libro ha sido eliminado", "Satisfactorio");
-                setTimeout(function () {
-                    $('#option_header_mis_libros').click();
-                }, 500);
+                toastr["success"]("La cuenta ha sido eliminada", "Satisfactorio");
+                $('#FormCreateAccount').trigger("reset");
+
+                $('#modal-notification-control-cuenta').modal('toggle');
+                getAccounts();
             } else {
                 toastr["info"]("Intente más tarde", "Oops");
             }
@@ -245,32 +439,54 @@ function DeleteMyBooks(isbn) {
     });
 }
 
-function sendFormUpdateBook() {
-    var isbn    = $('#update_data_isbn_value').val(),
-        title   = $('#update_book_title').val(),
-        author  = $('#update_book_author').val(),
-        year    = $('#update_book_year').val();
+function updateAccount() {
+    var id = $('#update_id_account').val(),
+        name = $('#update_name_account').val(),
+        amount = $('#update_amount_account').val(),
+        description = $('#update_description_account').val();
 
-    $.ajax({
-        data: { 'isbn': isbn, 'title': title, 'author': author, 'year': year },
-        url: "/update_book",
-        type: "post",
-        success: function (datos) {
-            if (datos == "Ok") {
-                toastr["success"]("El libro ha sido actualizado", "Satisfactorio");
-                setTimeout(function () {
-                    $('#UpdateMyBooks').modal('toggle');
-                }, 1000);
-                setTimeout(function () {
-                    $('#option_header_mis_libros').click();
-                }, 2000);
-            } else {
-                toastr["info"]("Intente más tarde", "Oops");
+    if (name == '') {
+        toastr["info"]("Identifiquemos la cuenta", "¡No tan rápido!");
+    } else if (amount == '') {
+        toastr["info"]("Indique la cantidad", "¡No tan rápido!");
+    } else {
+        $.ajax({
+            data: { 'id':id, 'name': name, 'amount': amount, 'description': description, 'currency': update_currency },
+            url: "/update_account",
+            type: "post",
+            success: function (datos) {
+                if (datos == "Ok") {
+                    toastr["success"]("La cuenta ha sido actualizada", "Satisfactorio");
+                    $('#FormUpdateAccount').trigger("reset");
+
+                    $('#modal-notification-control-cuenta').modal('toggle');
+                    getAccounts();
+                } else {
+                    toastr["info"]("Intente más tarde", "Oops");
+                }
             }
-        }
-    });
+        });
+    }
 }
 
-function change_stars(value) {
-    stars = value;
+// change badge type checkbox state $ or C$
+function change_badge_type(value) {
+    if (!value) {
+        currency = '$';
+        $("#span-badge-selected").html("$");
+    } else {
+        currency = 'C$';
+        $("#span-badge-selected").html("C$");
+    }
+}
+
+// change badge type checkbox state $ or C$
+function update_badge_type(value) {
+    if (value) {
+        update_currency = '$';
+        $("#span-update-badge-selected").html("$");
+    } else {
+        update_currency = 'C$';
+        $("#span-update-badge-selected").html("C$");
+    }
 }

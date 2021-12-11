@@ -80,25 +80,12 @@ $(document).ready(function () {
 
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('Mensaje');
-    window.onpopstate = e => {
-        console.log(e);
-        const data = e.state;
-        document.title = data.title;
-        if (e.state) {
-            document.getElementById('contenidoDinamico').innerHTML = e.state;
-        }
-    }
-});
-
 function sendFormLogin() {
     var username = $('#login_username'),
         password = $('#login_password');
 
     if (username.val() != '') {
         if (password.val() != '') {
-
             $.ajax({
                 data: { 'username': username.val(), 'password': password.val() },
                 url: "/login",
@@ -118,18 +105,15 @@ function sendFormLogin() {
                         password.focus();
                         toastr["info"]("La contraseña no es válida", "Credencial");
                     } else {
-                        $('#messageModalValidationFormLogin').html("<i class='fa fa-info'></i> Está comprobado de que somos humanos y cometemos errores, inténtelo más tarde.");
-                        openModal('btnModalValidationFormLogin');
+                        toastr["info"]("Está comprobado de que somos humanos y cometemos errores, inténtelo más tarde.", "Credencial");
                     }
                 }
             });
         } else {
-            $('#messageModalValidationFormLogin').html('Con una rica taza de café no se nos escapa ningún campo, escriba su contraseña.');
-            openModal('btnModalValidationFormLogin');
+            toastr["info"]("Con una rica taza de café no se nos escapa ningún campo, escriba su contraseña.", "Credencial");
         }
     } else {
-        $('#messageModalValidationFormLogin').html('Con una rica taza de café no se nos escapa ningún campo, escriba su nombre de usuario.');
-        openModal('btnModalValidationFormLogin');
+        toastr["info"]("Con una rica taza de café no se nos escapa ningún campo, escriba su nombre de usuario.", "Credencial");
     }
 }
 
@@ -178,10 +162,6 @@ function sendFormSignin() {
     } else {
         toastr["info"]("Con una rica taza de café no se nos escapa ningún campo.", "Rellene todos los campos");
     }
-}
-
-function openModal(id) {
-    $('#' + id).click();
 }
 
 function ValidateEmail(email) {
